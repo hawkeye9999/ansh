@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+    <style type="text/css">
+
+      .required:after {
+        content:" *";
+        color: red;
+        font-size: 1.0rem;
+      }
+      .content-wrapper:before{
+        background-image: linear-gradient(to right, #b64141, rgb(214, 38, 25));
+        bottom: 0;
+        left: 0;
+        clip-path: polygon(0 0, 0 100%, 100% 100%);
+      }
+
+      .content-wrapper:after{
+        background-image: linear-gradient(to right, rgb(214, 38, 25), #b64141);
+        top: 0;
+        right: 0;
+        clip-path: polygon(100% 0, 0 0, 100% 100%);
+      }
+
+    </style>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function message() {
+          // alert("Body loaded!");
+          $('.ajax-loader').css("visibility", "hidden");
+          var msg = "{{message}}";
+          document.login_form.username.focus();
+          // alert(msg);
+          if(msg!="")
+          {
+            $("#myModal").modal();
+            var myModal = $("#myModal");
+            clearTimeout(myModal.data('hideInterval'));
+            myModal.data('hideInterval', setTimeout(function(){
+                myModal.modal('hide');
+            }, 3000));
+          }
+        }
+    </script>
+  </head>
+  <body onload="message()">
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color: #C30;">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="color: white;border-bottom-color: gray;">
+              <h4 class="modal-title">Validation Message</h4>
+              <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body" style="color: white;">
+              <h4>{{message}}</h4>
+            </div>
+            <!-- Modal footer -->
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div> -->
+          </div>
+        </div>
+    </div>
+    {% include "loader.html" ignore missing %}
+    <div class="container-scroller">
+      <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="content-wrapper d-flex align-items-center auth" style="background-color: #F8F8F8;background-image:url('/static/images/background_login.png');background-repeat: repeat;background-size: auto;background-position: center left">
+          <div class="row flex-grow">
+            <div class="col-lg-4 mx-auto">
+              <div class="auth-form-light text-left p-5" style="box-shadow: 4px 4px 4px 4px #bbbfca;">
+                <div class="brand-logo">
+                  <img src="{{ url_for('static', filename='images/logo_2_sm.png')}}" style="width: 90%;height: 100%;margin-left: 5%;margin-right: 5%;">
+                </div>
+                <h4>Hello! let's get started</h4>
+                <h6 class="font-weight-light">Sign in to continue.</h6>
+                <form class="pt-3" name="login_form" action="/form_login/" onsubmit="return beforesubmit()" method="post" id="login_form">
+                  <!-- <div class="input-group">
+                    <input type="email" name="username" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Username" required>
+                    <div class="input-group-btn">
+                        <i class="glyphicon glyphicon-user"></i>
+                    </div>                     -->
+                  <!-- </div> -->
+                    <div class="form-group">
+                      <label class="required" for="password" style="font-size: 1.0rem;">Somaiya Email Id:</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" style="color: #495464;"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+                        </div>                        
+                        <input type="email" name="username" class="form-control" id="email" placeholder="Email Id" required>
+                      </div>
+                    </div>
+                  <div class="form-group">
+                    <label class="required" for="password" style="font-size: 1.0rem;">Password:</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" style="color: #495464;"><i class="fa fa-key" aria-hidden="true"></i></span>
+                        </div>                
+                        <input type="password" name="pass" class="form-control" id="exampleInputPassword1" min="8" placeholder="Password">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" onclick="showpassword()" type="button" style="padding: 10px;"><i class="fa fa-eye-slash" id="show" aria-hidden="true"></i></button>
+                        </div> 
+                    </div>
+                  </div>
+                  <div class="mt-3">
+                    <input type="submit" value="Login" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">
+                  </div>
+                  <div class="my-2 d-flex justify-content-between align-items-center">
+                    <div class="form-check">
+                      <label class="form-check-label text-muted">
+                        <input type="checkbox" class="form-check-input"> Keep me signed in </label>
+                    </div>
+                    <div class="form-check">
+                      <label class="form-check-label text-muted ">
+                        <a style="text-decoration: none;color:#aab2bd;" href="/resetpassword?forgotpassword=true"><input type="text" class="form-check-input"> Forgot Password? </label></a>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <script type="text/javascript">
+        $("#login_form").on("submit", function(){
+          $("#pageloader").css('display','block');
+        });
+        function showpassword() {
+            var password = document.getElementById('exampleInputPassword1').value;
+            var icon = document.getElementById('show').className;
+            // 
+            if(icon=="fa fa-eye")
+            {
+                // alert("icon_class:"+icon);
+                document.getElementById('show').className = "fa fa-eye-slash";
+                document.getElementById('exampleInputPassword1').type = "password";
+            }
+            else if(icon=="fa fa-eye-slash")
+            {
+                // alert("striked-icon:"+icon);    
+                
+                document.getElementById('show').className = "fa fa-eye";
+                document.getElementById('exampleInputPassword1').type = "text";
+            }   
+        }
+        function isNumberKey(evt){
+            var charCode = (evt.which) ? evt.which : evt.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        }
+        function validateEmail(email) { 
+          var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          if(re.test(email.value)){
+              //Email valid. Procees to test if it's from the right domain (Second argument is to check that the string ENDS with this domain, and that it doesn't just contain it)
+              if(email.value.indexOf("@somaiya.edu", email.value.length - "@somaiya.edu".length) !== -1){
+                  //VALID
+                  // alert("Valid email address!");
+                  return true;
+              }
+              else
+              {
+                alert("Email address must be of Somaiya!");
+                document.login_form.username.focus();
+                return false;
+              }
+          }
+          else
+          {
+            alert("Invalid Email Id");
+            document.login_form.username.focus();
+            return false;
+          }
+        }
+
+        function beforesubmit(e)
+        {
+          e.prevenetDefault()
+          var email_check = validateEmail(document.login_form.username);
+          var pass_check = false;
+          if(document.login_form.pass.value.length<8)
+          {
+            alert("Password cannot be less than 8 characters!");
+          }
+          else if(document.login_form.pass.value.length>=8)
+          {
+            pass_check = true;
+          }
+          if(email_check && pass_check)
+          {
+            return true;
+          }
+          else
+          {
+            return false;
+          }
+        }
+
+    </script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+  </body>
+</html>

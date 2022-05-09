@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Add Question </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">    
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style type="text/css">
+      .form-control{
+        font-size: 1.000rem;
+      }
+      .form-group label{
+       font-size: 1.0125rem; 
+      }
+      .btn2 {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 2%;
+      }
+      .required:after {
+        content:" *";
+        color: red;
+        font-size: 1.0rem;
+      }
+
+      .wrapper {
+        margin: auto;
+        max-width: 640px;
+        padding-top: 0px;
+        text-align: center;
+      }
+
+      .container {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        /*border: 0.5px solid rgba(130, 130, 130, 0.25);*/
+        /*box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 
+                    0 0 0 1px rgba(0, 0, 0, 0.1);*/
+      }
+
+      .upload-container {
+        background-color: rgb(239, 239, 239);
+        border-radius: 6px;
+        padding: 10px;
+      }
+
+      .border-container {
+        border: 5px dashed rgba(198, 198, 198, 0.65);
+        border-radius: 6px;
+        padding: 20px;
+      }
+
+      .border-container p {
+        color: #130f40;
+        font-weight: 600;
+        font-size: 1.1em;
+        letter-spacing: -1px;
+        margin-top: 30px;
+        margin-bottom: 0;
+        opacity: 0.65;
+      }
+
+      #file-browser {
+        text-decoration: none;
+        color: rgb(22,42,255);
+        border-bottom: 3px dotted rgba(22, 22, 255, 0.85);
+      }
+
+      #file-browser:hover {
+        color: rgb(0, 0, 255);
+        border-bottom: 3px dotted rgba(0, 0, 255, 0.85);
+      }
+
+      .previous {
+        background-color: #f1f1f1;
+        color: black;
+        padding: 0.7vw 1.4vw 0.7vw 1.4vw;
+        margin: 0.3vw;
+        font-size: 2vw;
+      }
+
+      .next {
+        background-color: #f1f1f1;
+        color: black;
+        padding: 0.7vw 1.4vw 0.7vw 1.4vw;
+        margin: 0.3vw;
+        font-size: 2vw;
+      }
+
+      .round {
+        border-radius: 10%;
+      }
+      #right_left:hover {
+        background-color: #a12023;
+        color: white;
+      }
+      /* textarea {
+        resize: none;
+        overflow: hidden;
+        min-height: 50px;
+        max-height: 100px;
+        line-height: 20px;
+      } */
+     textarea{
+      line-height: 100px;
+     }
+    </style>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  {% include "loader.html" ignore missing %}
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper" style="background: #d8e3e7;">
+                  <div class="page-header">
+                    <h3 class="page-title">
+                        <span class="page-title-icon bg-gradient-primary2 text-white mr-2"><i class="mdi mdi-pencil"></i></span> Create Quiz 
+                    </h3>
+                    <nav aria-label="breadcrumb">
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-data active" aria-current="page">
+                                <span></span> </i>
+                            </li>
+                        </ul>
+                    </nav>
+                  </div>
+                  <!-- <div class="row">
+                    <div class="col-md-12 mb-md-4 mt-md-3">
+                      <a href="#" id="right_left" class="previous round" style="text-decoration: none;">&#8249;</a>
+                      <a href="#" id="right_left" class="next round" style="text-decoration: none;">&#8250;</a>
+                    </div>
+                  </div> -->
+
+                  <div class="row">
+                    <div class="col-md-12 grid-margin">
+                      <div class="card" style="width: 100%;margin-left: 0%;margin-right: 10%;">
+                        <div class="card-body">
+                          <h4 class="card-title">Add Questions</h4>
+                          <p class="card-description"></p>
+                          <form class="forms-sample mt-5" id="quiz_det" action="/quiz/add_question/" method="post">
+                            <h4>Q {{ ques }}.</h4>
+                            <div class="form-group">
+                              <label class="required" for="exampleInputUsername1">Question</label>
+                              <textarea class="form-control" name="ques{{ ques }}" id="quiz_title" placeholder="Write Question here" rows="5" required></textarea>
+                              <!-- <textarea class="form-control" name="ques{{ ques }}" id="quiz_title" placeholder="Write Question here" oninput="auto_grow(this)" required></textarea> -->
+                            </div>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label class="required" for="exampleFormControlSelect3">Answer Type</label>
+                                  <select class="form-control form-control-sm" name="answ_type" id="answ_type" onchange="display_answertype()" style="width: 100%;" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="mcq">Multiple Choice</option>
+                                    <option value="one_line">One Line Answer</option>
+                                    <!-- <option value="desc">Descriptive</option> -->
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label class="required" for="exampleFormControlSelect3">Points</label>
+                                  <input type="number" onkeypress="return isNumberKey(event)" step="1" min="1" class="form-control" name="points" placeholder="points" style="width: 100%;" required>
+                                </div>
+                              </div>
+                            </div>
+                            <div id="mcq" style="display: none;">
+                              <div id="options" id="opt{{option}}">
+                               <div class="row">
+                                <div class="col-md-10">
+                                  <div class="form-group">
+                                    <input type="hidden" name="ttloptions" id="ttloptions" value="{{option}}" class="mcq">
+                                    <label class="required" for="exampleInputConfirmPassword1">Option {{option}}</label>
+                                    <input type="text" class="mcq form-control" name="opt1" placeholder="Option1" style="width: 100%;" required>
+                                  </div>
+                                </div>
+                                <div class="col-md-2" style="display: flex;align-items: center;">
+                                  <button class="btn2" onclick="addoptions('{{option}}')" id="addbtn{{option}}"><i class="fa fa-plus"></i></button>
+                                </div>
+                               </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="required" for="exampleFormControlSelect3">Correct Option</label>
+                                    <select class="mcq form-control form-control-sm" name="correct_opt" id="correct_opt" style="width: 100%;" required>
+                                      <option value="" disabled selected>Select</option>
+                                      <option value="option1">Option 1</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                {% if session['ques_timer']==1 and session['q_time_division']=='m' %}
+                                <div class="col-md-6">
+                                  <div class="row" style="text-align: center;">
+                                    <div class="col-sm-3">
+                                      <div class="form-group">
+                                        <label class="required" for="exampleFormControlSelect3">Minutes</label>
+                                        <input type="number" onkeypress="return isNumberKey(event)" step="1" id="mcq_mins" min="0" max="10" class="mcq form-control" name="mcq_mins" placeholder="00" style="width: 100%;" required>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-1" style="padding: 2.0rem;">
+                                      :
+                                    </div>
+                                    <div class="col-sm-3">
+                                      <div class="form-group">
+                                        <label class="required" for="exampleFormControlSelect3">Seconds</label>
+                                        <input type="number" onkeypress="return isNumberKey(event)" step="5" id="mcq_secs" min="0" max="55" class="mcq form-control" name="mcq_secs" placeholder="00" style="width: 100%;" required>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endif %}
+                              </div>
+                            </div>
+                            <div id="one_line" style="display: none;">
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label for="exampleInputUsername1">Answer</label>
+                                    <textarea class="one form-control" name="ans{{ ques }}" id="answer" placeholder="Written by Student....." rows="2" disabled></textarea>
+                                  </div>
+                                </div>
+                                {% if session['ques_timer']==1 and session['q_time_division']=='m' %}
+                                <div class="col-md-6">
+                                  <div class="row" style="text-align: center;">
+                                    <div class="col-sm-3">
+                                      <div class="form-group">
+                                        <label class="required" for="exampleFormControlSelect3">Minutes</label>
+                                        <input type="number" onkeypress="return isNumberKey(event)" step="1" min="0" max="10" id="one_mins" class="one form-control" name="one_mins" placeholder="00" style="width: 100%;" required>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-1" style="padding: 2.0rem;">
+                                      :
+                                    </div>
+                                    <div class="col-sm-3">
+                                      <div class="form-group">
+                                        <label class="required" for="exampleFormControlSelect3">Seconds</label>
+                                        <input type="number" onkeypress="return isNumberKey(event)" step="5"  min="0" id="one_secs" max="55" class="one form-control" name="one_secs" placeholder="00" style="width: 100%;" required>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endif %}
+                              </div>
+                            </div>
+
+                            <div id="desc" style="display: none;">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="wrapper">
+                                    <div class="container">
+                                      <h4 style="font-size:1.7vw;">Pdf Will be Uploaded By Student</h4>
+                                      <div class="upload-container">
+                                        <div class="border-container">
+                                          <!--<input type="file" id="file-upload">-->
+                                          <img src="{{ url_for('static', filename='images/pdf_upload.png')}}" style="max-width:100%;height:auto;">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div class="row">
+                              <div class="col-md-4">
+                                <button type="submit" class="btn btn-gradient-primary mr-2" style="margin: 5%;">Add Question</button>
+                              </div>
+                              <div class="col-md-4">
+                                <button type="submit" onclick="preview_quiz()" class="btn btn-success mr-2" style="margin: 5%;">Preview</button>
+                              </div>
+                              <div class="col-md-4" >
+                                <button type="button" onclick="cancel_question()" class="btn btn-light" style="margin: 5%;">Cancel</button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                      <!-- div class="col-md-4 stretch-card grid-margin">
+                          <div class="card bg-gradient-success card-img-holder text-white">
+                              <div class="card-body">
+                                  <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                  <h4 class="font-weight-normal mb-3">Visitors Online <i class="mdi mdi-diamond mdi-24px float-right"></i>
+                                  </h4>
+                                  <h2 class="mb-5">95,5741</h2>
+                                  <h6 class="card-text">Increased by 5%</h6>
+                              </div>
+                          </div>
+                      </div> -->
+                  </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer" style="background: #d8e3e7;">
+                    <!-- <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+                    </div> -->
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/subject.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    
+    <!-- <script src="{{ url_for('static', filename='js/bootstrap.js')}}"></script> -->
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('.ajax-loader').css("visibility", "hidden");
+      });
+      function display_answertype()
+      {
+        var e = document.getElementById("answ_type");
+        var answer_type = e.value;
+        // alert(answer_type);
+        if(answer_type=='mcq'){
+          $("#one_line").hide();
+          $("#desc").hide();
+          // $('#one_mins').prop('required',false);
+          // $('#one_secs').prop('required',false);
+          // $('#mcq_mins').prop('required',true);
+          // $('#mcq_secs').prop('required',true);
+          // $('#correct_opt').prop('required',true);
+          $(".one").attr('required', false);
+          $(".mcq").attr('required', true);
+          $("#mcq").show();
+          
+
+        }
+        else if(answer_type=='one_line'){
+          $("#mcq").hide();
+          $("#desc").hide();
+          // $('#one_mins').prop('required',true);
+          // $('#one_secs').prop('required',true);
+          // $('#mcq_mins').prop('required',false);
+          // $('#mcq_secs').prop('required',false);
+          // $('#correct_opt').prop('required',false);
+          $(".one").attr('required', true);
+          $(".mcq").attr('required', false);
+          $("#one_line").show();
+        }
+        else if(answer_type=='desc'){
+          $("#mcq").hide();
+          $("#one_line").hide();
+          // $('#one_mins').prop('required',true);
+          // $('#one_secs').prop('required',true);
+          // $('#mcq_mins').prop('required',false);
+          // $('#mcq_secs').prop('required',false);
+          // $('#correct_opt').prop('required',false);
+          $(".one").attr('required', false);
+          $(".mcq").attr('required', false);
+          $("#desc").show();
+        }
+      }
+      function isNumberKey(evt){
+        var charCode = (evt.which) ? evt.which : evt.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+      }
+
+      function addoptions(opt){
+          if(typeof opt === 'string') {
+              opt = parseInt(opt)
+          }
+          // alert(opt)
+          if(opt>=4)
+          {
+            alert("not allowed");
+            $("#myModal").modal();
+            var myModal = $("#myModal");
+            $("#modbod").text("Sorry You Can't add more than four options!");
+            clearTimeout(myModal.data('hideInterval'));
+            myModal.data('hideInterval', setTimeout(function(){
+                myModal.modal('hide');
+            }, 3000));
+          }
+          else{
+            var option = opt+1;
+            // alert(option)
+            $("#addbtn"+opt).css("display", "none");
+            if(opt>1)
+            {
+              $("#minbtn"+opt).css("display", "none");
+            }
+            var newDiv = $('<div class="row" id="opt'+option+'"><div class="col-md-10"><div class="form-group" id="opt'+option+'"><label for="exampleInputConfirmPassword1">Option '+option+'</label><input type="text" class="mcq form-control" name="opt'+option+'" id="quiz_date" placeholder="Option'+option+'" style="width: 100%;" required></div></div><div class="col-md-2" style="display: flex;align-items: center;"><button class="btn2" onclick="addoptions('+option+')" id="addbtn'+option+'"><i class="fa fa-plus"></i></button><button class="btn2" onclick="minusoptions('+option+')" id="minbtn'+option+'"><i class="fa fa-minus"></i></button></div></div>');
+           $('#ttloptions').val(option);
+           $('#options').append(newDiv);
+           $('#correct_opt').append($("<option></option>").attr("value", "option"+option).text("Option "+option)); 
+          }
+      }
+      function minusoptions(opt){
+          // alert(opt)
+          $("#opt"+opt).remove();
+          var option = opt-1;
+          $("#addbtn"+option).css("display", "block");
+          $("#minbtn"+option).css("display", "block");
+          $('#ttloptions').val(option);
+          $("#correct_opt option[value='option"+opt+"']").remove();
+      }
+      function cancel_question()
+      {
+          var r = confirm("Are You Sure You Want to cancel adding a Question?");
+          if (r == true) {
+              var base_url = window.location.origin;
+              // alert(base_url);
+              redirect_url = base_url+'/quiz/preview_quiz_question/';
+              // alert(redirect_url);
+              window.location.replace(redirect_url);
+              // alert(base_url);
+              document.getElementById("quiz_det").action = "/quiz/preview_quiz_question/"; 
+          } else {
+              document.getElementById("quiz_det").action = "/quiz/add_quiz_info/"; 
+          }
+      }
+      function preview_quiz()
+      {
+        var base_url = window.location.origin;
+        // alert(base_url);
+        redirect_url = base_url+'/quiz/preview_quiz_question/';
+        // alert(redirect_url);
+        window.location.replace(redirect_url);
+      }
+      // function auto_grow(element) {
+      //   element.style.height = "5px";
+      //   element.style.height = (element.scrollHeight)+"px";
+      // }
+      
+
+    </script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <!-- <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script> -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+    <!-- End custom js for this page -->
+</body>
+
+</html>

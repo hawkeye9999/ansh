@@ -1,0 +1,153 @@
+<div class="modal fade" id="Add_fac" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog add_fac" role="document">
+      <div class="modal-content add_fac-content">
+        <div class="modal-header border-bottom-0" style="background: linear-gradient(to right, #cb2d3e, #a12023);color: white;">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="mdi mdi-account-plus" aria-hidden="true" style="padding: 5px;font-style: bold;font-weight: 900;"></i>Add faculty</h5>
+          <button type="button" class="close" data-dismiss="modal" style="color: white;" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form name="Add_Faculty_form" id="Add_Faculty_form" action="/admin/add_faculty/" onsubmit="return beforesubmit('add')" method="post" enctype="multipart/form-data">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label required">Designation</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text inputgroup_text"><i class="mdi mdi-rename-box" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                                    </div>
+                                    <input type="text" onkeypress="return isAlphabetKey(event);" class="form-control" name="desg" placeholder="Mr,Mrs,Dr,Prof...." maxlength="4" minlength="2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label required">First Name</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text inputgroup_text"><i class="mdi mdi-rename-box" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                                    </div>
+                                    <input type="text" onkeypress="return isAlphabetKey(event);" class="form-control" name="fname" placeholder="Enter First Name">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label required">Middle Name</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text inputgroup_text"><i class="mdi mdi-rename-box" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                                    </div>
+                                    <input type="text" onkeypress="return isAlphabetKey(event);" class="form-control" name="mname" placeholder="Enter Middle Name"> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label required">Last Name</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text inputgroup_text"><i class="mdi mdi-rename-box" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                                    </div>
+                                    <input type="text" onkeypress="return isAlphabetKey(event);" class="form-control" name="lname" placeholder="Enter Last Name"> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label required">Email address</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text inputgroup_text"><i class="mdi mdi-email" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                                    </div>
+                                    <input type="email" class="form-control" name="mail" placeholder="Enter somaiya email address" aria-label="email">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label required">College ID</label>
+                            <div class="col-sm-9">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                <span class="input-group-text inputgroup_text"><i class="mdi mdi-account-card-details" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="fac_id" placeholder="Enter valid Faculty ID" onkeypress="return isNumberKey(event);" maxlength="6" minlength="6">
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label required">Gender</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text inputgroup_text"><i class="mdi mdi-gender-transgender" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                                    </div>
+                                    <select class="form-control" name="gender">
+                                        <option value="" selected disabled>Select</option>
+                                        <option value="M">Male</option>
+                                        <option value="F">Female</option>
+                                        <option value="O">Others</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label required">Contact Number.</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text inputgroup_text"><i class="mdi mdi-cellphone" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                                    </div>
+                                    <input type="text" onkeypress="return isNumberKey(event);" class="form-control" name="mob_num" placeholder="Enter valid Mobile Number" maxlength="10" minlength="10">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Upload Photo</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" onchange="validateSize(this,'upload')" id="upload" name="f_photo" type="file" accept="image/png, image/jpeg" /> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 d-flex justify-content-center">
+                <div class="row" style="display: contents;text-align: center;">
+                    <div class="col-md-6">
+                        <input type="reset" class="btn btn-success" style="background-color: #0a4f9d;margin: 1%;">
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-success" style="background: linear-gradient(to right, #46c35f, #2aa260);margin: 1%;">Submit</button>    
+                    </div>
+                </div>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>

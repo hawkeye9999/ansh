@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Quicky </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">    
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style type="text/css">
+      .form-control{
+        font-size: 1.000rem;
+      }
+      .form-group label{
+       font-size: 1.0125rem; 
+      }
+      .btn2 {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 2%;
+      }
+      h4,h3
+      {
+        font-size:  1.525rem;
+      }
+    </style>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script>
+      function full(){
+        var element = document.querySelector("#contain");
+        if (element.requestFullscreen){
+          element.requestFullscreen()
+          .then(function() {
+              
+          })
+          .catch(function(error) {
+              alert("Could Not Enter FullScreen Try Again...")
+          })
+        }
+      }
+      function message() {
+        // alert("Body loaded!");
+        var msg = "{{message}}";
+        // alert("{{data}}");
+        if(msg!="")
+        {
+          $("#myModal").modal();
+          var myModal = $("#myModal");
+          $("#modbod").text(msg);
+          clearTimeout(myModal.data('hideInterval'));
+          myModal.data('hideInterval', setTimeout(function(){
+              myModal.modal('hide');
+          }, 3000));
+        }
+      }
+      {% if message=="" %}
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        var date = '{{q_details.q_date}}';
+        var dt_str = new Date(date).toLocaleDateString("en-US", options);
+        dt_str = dt_str+' '+'{{q_details.q_time_start}}'
+        // alert(date);
+        // alert(dt_str);
+        var countDownDate = new Date(dt_str).getTime();
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+
+          // Get today's date and time
+          var now = new Date().getTime();
+
+          // Find the distance between now and the count down date
+          var distance = countDownDate - now;
+
+          // Time calculations for days, hours, minutes and seconds
+          var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          // Display the result in the element with id="demo"
+          document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+          + minutes + "m " + seconds + "s ";
+
+          // If the count down is finished, write some text
+          if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("demo").innerHTML = "EXPIRED";
+            location.reload(); 
+          }
+        }, 1000);
+      {% endif %}
+    </script>
+</head>
+
+<body onload="message()">
+  <button id='full' type='button' onclick ='full()'></button>
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color: #C30;">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="color: white;border-bottom-color: gray;">
+              <h4 class="modal-title">Validation Message</h4>
+              <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body" style="color: white;">
+              <h4 id="modbod"></h4>
+            </div>
+            <!-- Modal footer -->
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div> -->
+          </div>
+        </div>
+    </div>
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+            <!-- partial -->
+            <div class="main-panel" id='contain'>
+                <div class="content-wrapper" style="background: #d8e3e7;">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary2 text-white mr-2"><i class="mdi mdi-pencil"></i></span>{{q_details.q_sub}} Quiz 
+                        </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-data active" aria-current="page">
+                                    <span></span> </i>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 grid-margin">
+                            <div class="card" style="width: 100%;margin-left: 0%;margin-right: 10%;">
+                              <div class="card-body">
+                                {% if message!="" %}
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <center><h4>{{message}}</h4></center>
+                                  </div>
+                                </div>
+                                {% else %}
+                                <div class="row">
+                                  <div class="col-md-6" style="left: 30%;-ms-transform: translateX(-50%);transform: translateX(-50%);">
+                                    <!-- {{q_details}} -->
+                                    <div class="row">
+                                      <div class="col-md-6" style="text-align: center;">
+                                        <h3 style="font-size:  1.525rem;" class="card-title">Quiz Topic:</h3>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <h3>{{q_details.q_title}}</h3>
+                                      </div>
+                                    </div>
+                                    <!-- 2 -->
+                                    <div class="row">
+                                      <div class="col-md-6" style="text-align: center;">
+                                        <h4>Subject:</h4>
+                                      </div>
+                                      <div class="col-md-6">
+                                        {% if session['quiz_type']=='0' %}
+                                        <h4>{{q_details.q_sub}}</h4>
+                                        {% else %}
+                                        <h4>Non Subjective</h4>
+                                        {% endif %}
+                                      </div>
+                                    </div>
+                                    <!-- 3 -->
+                                    <div class="row">
+                                      <div class="col-md-6" style="text-align: center;">
+                                        <h4>Total Questions: </h4>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <h4>{{q_details.total_question}}</h4>
+                                      </div>
+                                    </div>
+                                    <!-- 4 -->
+                                    <div class="row">
+                                      <div class="col-md-6" style="text-align: center;">
+                                        <h4>Quiz on :</h4>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <h4>{{date}}</h4>
+                                      </div>
+                                    </div>
+                                    <!-- <p class="card-description"></p> -->
+                                  </div>
+                                  <div class="col-md-6" style="text-align: center;position: relative;">
+                                    <div class="content" style="position: absolute;top: 30%;left: 50%;-ms-transform: translateY(-50%);transform: translateY(-50%);-ms-transform: translateX(-50%);transform: translateX(-50%);">
+                                      <h4>Time Remaining:</h4><br>
+                                      <p id="demo" style="font-size: 1.825rem;font-style: bold;"></p>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endif %}
+                                
+                              </div>
+                            </div>
+                          </div>
+                        <!-- div class="col-md-4 stretch-card grid-margin">
+                            <div class="card bg-gradient-success card-img-holder text-white">
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                    <h4 class="font-weight-normal mb-3">Visitors Online <i class="mdi mdi-diamond mdi-24px float-right"></i>
+                                    </h4>
+                                    <h2 class="mb-5">95,5741</h2>
+                                    <h6 class="card-text">Increased by 5%</h6>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer" style="background: #d8e3e7;">
+                    <!-- <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+                    </div> -->
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/subject.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    
+    <!-- <script src="{{ url_for('static', filename='js/bootstrap.js')}}"></script> -->
+    <script type="text/javascript">
+    </script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <!-- <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script> -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+
+    <!-- End custom js for this page -->
+</body>
+
+</html>

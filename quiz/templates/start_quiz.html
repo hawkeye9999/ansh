@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Online Examination </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <style type="text/css">
+        .instruction_list {
+            font-size: 1.5rem;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    </script>
+</head>
+<body>
+    {% include "loader.html" ignore missing %}
+    <div class="container-scroller">
+            <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+
+            <div id='contain' class="main-panel">
+            <div id = 'containWrap' class="content-wrapper" style="background: #d8e3e7;">
+                <center><h1>START QUIZ</h1></center>
+                <h2>Instructions</h2>
+                <ol class='instruction_list' style="margin-left:20px">
+                    <li>Once you enter fullscreen, you won't be able to change the tab or exit until completion.</li>
+                    <li>Please attempt the test sincerely.</li>
+                    <li>Any malpractice observed during the test will result into disqualification.</li>
+                    <li>Once you lose your chances of switching the tab the quiz will stop automatically.</li>
+                    <h3 style="text-align: center;margin-top: 1rem;">*****<b> It's better to Fail than to Cheat </b>*****</h3>
+                </ol>
+                <br />
+            <center><button id='start_quiz_btn' type='button'  onclick = "location.href='/quiz/get_quiz?quiz_id={{qid}}'" class="btn btn-info" >Start Quiz</button></center>
+
+            <!--Content wrapper end-->
+            </div>
+            <!-- MAIN PANEL END -->
+            </div>
+        </div>        
+    </div>
+</body>
+<script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.ajax-loader').css("visibility", "hidden");
+    });
+</script>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Subject Master </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper" style="background: #d8e3e7;">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary2 text-white mr-2">
+                  <i class="mdi mdi-book-open-variant"></i>
+                </span> Elective Subjects </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary2 align-middle"></i>
+                                </li>
+                            </ul> 
+                        </nav>
+                    </div>
+                    <div class="row">
+                    {% if elective_sub %}
+                      {% set count = 0 %}
+                      {% for elective_subjects in elective_sub %}
+                          <!-- <h2>Count before loop:{{count}}</h2> -->
+                          {% if (loop.index-1)%6==0 %}
+                              {% set count = 0 %}
+                          {% elif loop.index<=6 %}
+                              {% set count = loop.index-1 %}
+                          {% else %}
+                              {% set index = (loop.index/6)|round|int %}
+                              <!-- <h2>Index:{{ index }}</h2> -->
+                              {% set count = (loop.index-1)-(index*6) %}
+                          {% endif %}
+                      
+                          <!-- <h2>Count before loop:{{count}}</h2> -->
+                      <div class="col-md-4 stretch-card grid-margin">
+                          <div class="card {{color[count]}} card-img-holder text-white">
+                              <a class="card-block stretched-link text-decoration-none" href="/admin/elective_choice?sem_mode=sem{{loop.index}}">
+                                <div class="card-body" style="color: white;">
+                                  <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                  <h3 class="font-weight-normal mb-3"><b>{{elective_subjects.batch}}</b></i>
+                                  </h3>
+                                </div>
+                              </a>
+                          </div>
+                      </div>
+                      {% endfor %}
+                    {% endif %}    
+                    </div>
+                </div>
+                <footer class="footer" style="background: #d8e3e7;">
+                    <!-- <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+                    </div> -->
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+    <!-- End custom js for this page -->
+</body>
+
+</html>

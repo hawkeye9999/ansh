@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Edit Question </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">    
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style type="text/css">
+      .form-control{
+        font-size: 1.000rem;
+      }
+      .form-group label{
+       font-size: 1.0125rem; 
+      }
+      .btn2 {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 2%;
+      }
+      .wrapper {
+        margin: auto;
+        max-width: 640px;
+        padding-top: 0px;
+        text-align: center;
+      }
+
+      .container {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        /*border: 0.5px solid rgba(130, 130, 130, 0.25);*/
+        /*box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 
+                    0 0 0 1px rgba(0, 0, 0, 0.1);*/
+      }
+
+      .upload-container {
+        background-color: rgb(239, 239, 239);
+        border-radius: 6px;
+        padding: 10px;
+      }
+
+      .border-container {
+        border: 5px dashed rgba(198, 198, 198, 0.65);
+        border-radius: 6px;
+        padding: 20px;
+      }
+
+      .border-container p {
+        color: #130f40;
+        font-weight: 600;
+        font-size: 1.1em;
+        letter-spacing: -1px;
+        margin-top: 30px;
+        margin-bottom: 0;
+        opacity: 0.65;
+      }
+
+      #file-browser {
+        text-decoration: none;
+        color: rgb(22,42,255);
+        border-bottom: 3px dotted rgba(22, 22, 255, 0.85);
+      }
+
+      #file-browser:hover {
+        color: rgb(0, 0, 255);
+        border-bottom: 3px dotted rgba(0, 0, 255, 0.85);
+      }
+
+      .previous {
+        background-color: #f1f1f1;
+        color: black;
+        padding: 0.7vw 1.4vw 0.7vw 1.4vw;
+        margin: 0.3vw;
+        font-size: 2vw;
+      }
+
+      .next {
+        background-color: #f1f1f1;
+        color: black;
+        padding: 0.7vw 1.4vw 0.7vw 1.4vw;
+        margin: 0.3vw;
+        font-size: 2vw;
+      }
+
+      .round {
+        border-radius: 10%;
+      }
+      #right_left:hover {
+        background-color: #a12023;
+        color: white;
+      }
+    </style>
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% set i = 1 %}
+    {% set total = 0 %}
+    <script>
+        function message() {
+          // alert("Body loaded!");
+          var msg = "{{message}}";
+          // alert("{{data}}");
+          if(msg!="")
+          {
+            $("#myModal").modal();
+            var myModal = $("#myModal");
+            $("#modbod").text(msg);
+            clearTimeout(myModal.data('hideInterval'));
+            myModal.data('hideInterval', setTimeout(function(){
+                myModal.modal('hide');
+            }, 3000));
+          }
+          {% if ques_det.ans_type == 1 %}
+            {% set answ_type = 1 %}
+          {% elif ques_det.ans_type == 0 %}
+            {% set answ_type = 0 %}
+            options();
+          {% endif %}
+          display_answertype();
+        }
+        function options()
+        {
+          
+          {% if ques_det.opt1!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+          {% if ques_det.opt2!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+          {% if ques_det.opt3!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+          {% if ques_det.opt4!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+          // alert("{{total}}");
+        }
+    </script>
+</head>
+
+<body onload="message()">
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color: #C30;">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="color: white;border-bottom-color: gray;">
+              <h4 class="modal-title">Validation Message</h4>
+              <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body" style="color: white;">
+              <h4 id="modbod"></h4>
+            </div>
+            <!-- Modal footer -->
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div> -->
+          </div>
+        </div>
+    </div>
+    {% include "loader.html" ignore missing %}
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper" style="background: #d8e3e7;">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary2 text-white mr-2"><i class="mdi mdi-pencil"></i></span> Create Quiz 
+                        </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-data active" aria-current="page">
+                                    <span></span> </i>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 grid-margin">
+                            <div class="card" style="width: 100%;margin-left: 0%;margin-right: 10%;">
+                              <div class="card-body">
+                                <h4 class="card-title">Edit Question</h4>
+                                <p class="card-description"></p>
+                                <form class="forms-sample mt-5" id="quiz_det" action="/quiz/update_question/" method="post">
+                                  <h4>Q {{ ques_no }}.</h4>
+                                  <div class="form-group">
+                                    <label for="exampleInputUsername1">Question</label>
+                                    <textarea class="form-control" name="ques{{ ques_no }}" id="quiz_title" placeholder="Write Question here" rows="5" required>{{ ques_det.question }}</textarea>
+                                    <input type="hidden" name="ttloptions" id="ttloptions" value="{{total}}" required="false">
+                                    <input type="hidden" name="ques_index" id="ques_index" value="{{ques_det.q_id}}" required="false">
+                                    <input type="hidden" name="ques_no" id="ques_no" value="{{ ques_no }}" required="false">
+                                  </div>
+                                  {% set question = ques_det %}
+                                  <div class="row">
+                                    <div class="col-md-4">
+                                      <div class="form-group">
+                                        <label for="exampleFormControlSelect3">Answer Type</label>
+                                        <select class="form-control form-control-sm" name="ed_answ_type" id="answ_type" onchange="display_answertype()" style="width: 100%;" required>
+                                          <option value="" onclick="return false;" readonly>Select</option>
+                                          {% if question.ans_type == 0 %}
+                                          <option value="mcq" selected>Multiple Choice</option>
+                                          <option value="one_line">One Line Answer</option>
+                                          <!-- <option value="desc">Descriptive</option> -->
+                                          {% elif question.ans_type == 1 %}
+                                          <option value="mcq">Multiple Choice</option>
+                                          <option value="one_line" selected>One Line Answer</option>
+                                          <!-- <option value="desc">Descriptive</option> -->
+                                          {% elif question.ans_type == 2 %}
+                                          <option value="mcq">Multiple Choice</option>
+                                          <option value="one_line">One Line Answer</option>
+                                          <!-- <option value="desc" selected>Descriptive</option> -->
+                                          {% endif %}
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                      <div class="form-group">
+                                        <label for="exampleFormControlSelect3">Points</label>
+                                        <input type="number" value="{{ question.points }}" onkeypress="return isNumberKey(event)" step="1" min="1" class="form-control" name="ed_points" placeholder="points" style="width: 100%;" required>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  <div id="mcq" style="display: none;">
+                                    
+                                    <div id="options">
+                                    {% if total==0 %}
+                                    <div class="row">
+                                      <div class="col-md-10">
+                                        <div class="form-group">
+                                          <input type="hidden" name="ttloptions" id="ttloptions" value="{{total+1}}">
+                                          <label for="exampleInputConfirmPassword1">Option {{total+1}}</label>
+                                          <input type="text" id="mcq_opt1" class="mcq form-control" name="opt1" placeholder="Option1" style="width: 100%;" required>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-2" style="display: flex;align-items: center;">
+                                        <button class="btn2" onclick="addoptions('{{total+1}}')" id="addbtn{{total+1}}"><i class="fa fa-plus"></i></button>
+                                      </div>
+                                    </div>  
+                                    {% elif total>0 %}
+                                      {% for j in range(total) %}
+                                    <div class="row" id="opt{{j+1}}">
+                                      <div class="col-md-10">
+                                        <div class="form-group">
+                                          <label for="exampleInputConfirmPassword1">Option {{j+1}}</label>
+                                          {% if (j+1) == 1 %}
+                                          <input type="text" class="mcq form-control" name="opt1" placeholder="Option1" style="width: 100%;" value="{{ question.opt1 }}" required>
+                                          {% elif (j+1) == 2 %}
+                                          <input type="text" class="mcq form-control" name="opt2" placeholder="Option2" style="width: 100%;" value="{{ question.opt2 }}" required>
+                                          {% elif (j+1) == 3 %}
+                                          <input type="text" class="mcq form-control" name="opt3" placeholder="Option3" style="width: 100%;" value="{{ question.opt3 }}" required>
+                                          {% elif (j+1) == 4 %}
+                                          <input type="text" class="mcq form-control" name="opt4" placeholder="Option4" style="width: 100%;" value="{{ question.opt4 }}" required>
+                                          {% endif %}
+                                        </div>
+                                      </div>
+                                      {% if (j+1) == 1 and (j+1) == total %}
+                                        <div class="col-md-2" id="btn_col{{(j+1)}}" style="display: flex;align-items: center;">
+                                          <button class="btn2" onclick="addoptions('{{(j+1)}}')" id="addbtn{{(j+1)}}"><i class="fa fa-plus"></i></button>
+                                        </div>
+                                      {% elif (j+1) == 2 and (j+1) == total or (j+1) == 3 and  (j+1) == total or (j+1) == 4 and (j+1) == total %}
+                                      <div class="col-md-2" id="btn_col{{(j+1)}}" style="display: flex;align-items: center;">
+                                        <button class="btn2" onclick="addoptions('{{(j+1)}}')" id="addbtn{{(j+1)}}"><i class="fa fa-plus"></i></button>
+                                        <button type="button" class="btn2" onclick="minusoptions('{{(j+1)}}')" id="minbtn{{(j+1)}}"><i class="fa fa-minus"></i></button>
+                                      </div>
+                                      {% endif %}
+                                    </div>
+                                      {% endfor %}
+                                    {% endif %}
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label for="exampleFormControlSelect3">Correct Option</label>
+                                          <select class="mcq form-control form-control-sm" name="correct_opt" id="correct_opt" style="width: 50%;" required>
+                                            <option value="" onclick="return false;" readonly selected>Select</option>
+                                            {% if total==0 %}
+                                            <option value="option1">Option 1</option>
+                                            {% elif total>0 %}
+                                            {% for j in range(total) %}
+                                              {% if (j+1) == 1 %}
+                                                {% if question.correct_opt == 'option1' %}
+                                                <option value="option{{j+1}}" selected>Option {{j+1}}</option>
+                                                {% else %}
+                                                <option value="option{{j+1}}">Option {{j+1}}</option>
+                                                {% endif %}
+                                              {% endif %}
+                                              {% if (j+1) == 2 %}
+                                                {% if question.correct_opt == 'option2' %}
+                                                <option value="option{{j+1}}" selected>Option {{j+1}}</option>
+                                                {% else %}
+                                                <option value="option{{j+1}}">Option {{j+1}}</option>
+                                                {% endif %}
+                                              {% endif %}
+                                              {% if (j+1) == 3 %}
+                                                {% if question.correct_opt == 'option3' %}
+                                                <option value="option{{j+1}}" selected>Option {{j+1}}</option>
+                                                {% else %}
+                                                <option value="option{{j+1}}">Option {{j+1}}</option>
+                                                {% endif %}
+                                              {% endif %}
+                                              {% if (j+1) == 4   %}
+                                                {% if question.correct_opt == 'option4' %}
+                                                <option value="option{{j+1}}" selected>Option {{j+1}}</option>
+                                                {% else %}
+                                                <option value="option{{j+1}}">Option {{j+1}}</option>
+                                                {% endif %}
+                                              {% endif %}
+                                            {% endfor %}
+                                            {% endif %}
+                                          </select>
+                                        </div>
+                                      </div>
+                                      {% if session['ques_timer']==1 and session['q_time_division']=='m' %}
+                                      {% set time = question.q_time.split(':') %}
+                                      <div class="col-md-6">
+                                        <div class="row" style="text-align: center;">
+                                          <div class="col-sm-3">
+                                            <div class="form-group">
+                                              <label for="exampleFormControlSelect3">Minutes</label>
+                                              <input type="number" value="{{ time[1] }}" onkeypress="return isNumberKey(event)" step="1" id="mcq_mins" min="0" max="10" class="mcq form-control" name="ed_mcq_mins" placeholder="00" style="width: 100%;" required>
+                                            </div>
+                                          </div>
+                                          <div class="col-sm-1" style="padding: 2.0rem;">
+                                            :
+                                          </div>
+                                          <div class="col-sm-3">
+                                            <div class="form-group">
+                                              <label for="exampleFormControlSelect3">Seconds</label>
+                                              <input type="number" value="{{ time[2] }}"  onkeypress="return isNumberKey(event)" step="5" id="mcq_secs" min="0" max="55" class="mcq form-control" name="ed_mcq_secs" placeholder="00" style="width: 100%;" required>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      {% endif %}
+                                    </div>
+                                  </div>
+                                  <div id="one_line" style="display: none;">
+                                    <div class="row">
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label for="exampleInputUsername1">Answer</label>
+                                          <textarea class="form-control" name="ans{{ ques }}" id="answer" placeholder="Written by Student....." rows="2" readonly required="false"></textarea>
+                                        </div>
+                                      </div>
+                                      {% if session['ques_timer']==1 and session['q_time_division']=='m' %}
+                                      {% set time = question.q_time.split(':') %}
+                                      <div class="col-md-6">
+                                        <div class="row" style="text-align: center;">
+                                          <div class="col-sm-3">
+                                            <div class="form-group">
+                                              <label for="exampleFormControlSelect3">Minutes</label>
+                                              <input type="number" value="{{ time[1] }}" onkeypress="return isNumberKey(event)" step="1" min="0" max="10" id="one_mins" class="one form-control" name="ed_one_mins" placeholder="00" style="width: 100%;" required="true">
+                                            </div>
+                                          </div>
+                                          <div class="col-sm-1" style="padding: 2.0rem;">
+                                            :
+                                          </div>
+                                          <div class="col-sm-3">
+                                            <div class="form-group">
+                                              <label for="exampleFormControlSelect3">Seconds</label>
+                                              <input type="number" value="{{ time[2] }}" onkeypress="return isNumberKey(event)" step="5" min="0" id="one_secs" max="55" class="one form-control" name="ed_one_secs" placeholder="-" style="width: 100%;" required="true">
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      {% endif %}
+                                    </div>
+                                  </div>
+
+                                  <div id="desc" style="display: none;">
+                                    <div class="row">
+                                      <div class="col-md-12">
+                                        <div class="wrapper">
+                                          <div class="container">
+                                            <h4 style="font-size:1.7vw;">Pdf Will be Uploaded By Student</h4>
+                                            <div class="upload-container">
+                                              <div class="border-container">
+                                                <!--<input type="file" id="file-upload">-->
+                                                <img src="{{ url_for('static', filename='images/pdf_upload.png')}}" style="max-width:100%;height:auto;">
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+
+                                   <div class="row">
+                                    <div class="col-md-4">
+                                      <button type="submit" class="btn btn-gradient-primary mr-2" style="margin: 5%;">Update Question</button>
+                                    </div>
+                                    <div class="col-md-4">
+                                      <button type="submit" onclick="preview_quiz()" class="btn btn-success mr-2" style="margin: 5%;">Preview</button>
+                                    </div>
+                                    <div class="col-md-4">
+                                      <button type="button" onclick="cancel_edit()" class="btn btn-light" style="margin: 5%;">Cancel</button>
+                                    </div>
+                                   </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        <!-- div class="col-md-4 stretch-card grid-margin">
+                            <div class="card bg-gradient-success card-img-holder text-white">
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                    <h4 class="font-weight-normal mb-3">Visitors Online <i class="mdi mdi-diamond mdi-24px float-right"></i>
+                                    </h4>
+                                    <h2 class="mb-5">95,5741</h2>
+                                    <h6 class="card-text">Increased by 5%</h6>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer" style="background: #d8e3e7;">
+                    <!-- <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+                    </div> -->
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    
+    <!-- <script src="{{ url_for( 'static', filename='js/bootstrap.js')}}"></script> -->
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('.ajax-loader').css("visibility", "hidden");
+      });
+      function display_answertype()
+      {
+        var e = document.getElementById("answ_type");
+        var answer_type = e.value;
+        // alert(answer_type);
+        
+        if(answer_type=='mcq'){
+          $("#one_line").hide();
+          $("#desc").hide();
+          // $('#one_mins').prop('required',false);
+          // $('#one_secs').prop('required',false);
+          // $('#mcq_mins').prop('required',true);
+          // $('#mcq_secs').prop('required',true);
+          // $('#correct_opt').prop('required',true);
+          // $(".one").attr('required', false);
+          $(".one").removeAttr("required");
+          $(".mcq").attr('required', true);
+
+          $("#answer").removeAttr("required");
+          $("#ttloptions").removeAttr("required");
+          $("#ques_index").removeAttr("required");
+          $("#ques_no").removeAttr("required");
+
+          document.getElementById("answer").required = false;
+          document.getElementById("ttloptions").required = false;
+          document.getElementById("ques_index").required = false;
+          document.getElementById("ques_no").required = false;
+          $("#mcq").show();
+          {% set answ_type = 0 %}
+        }
+
+        else if(answer_type=='one_line'){
+          $("#mcq").hide();
+          $("#desc").hide();
+          // $('#one_mins').prop('required',true);
+          // $('#one_secs').prop('required',true);
+          // $('#mcq_mins').prop('required',false);
+          // $('#mcq_secs').prop('required',false);
+          // $('#correct_opt').prop('required',false);
+          $(".one").attr('required', true);
+          $(".mcq").removeAttr("required");
+
+          // $("#answer").removeAttr("required");
+          // $("#ttloptions").removeAttr("required");
+          // $("#ques_index").removeAttr("required");
+          // $("#ques_no").removeAttr("required");
+          // $(".mcq").attr('required', false);
+          document.getElementById("answer").required = false;
+          document.getElementById("ttloptions").required = false;
+          document.getElementById("ques_index").required = false;
+          document.getElementById("ques_no").required = false;
+          document.getElementById("mcq_opt1").required = false;
+          document.getElementById("correct_opt").required = false;
+          $("#one_line").show();
+          {% set answ_type = 1 %}
+        }
+
+        else if(answer_type=='desc'){
+          $("#mcq").hide();
+          $("#one_line").hide();
+          // $('#one_mins').prop('required',true);
+          // $('#one_secs').prop('required',true);
+          // $('#mcq_mins').prop('required',false);
+          // $('#mcq_secs').prop('required',false);
+          // $('#correct_opt').prop('required',false);
+          $(".one").attr('required', false);
+          $(".mcq").attr('required', false);
+          // document.getElementById("answer").required = false;
+          // document.getElementById("ttloptions").required = false;
+          // document.getElementById("ques_index").required = false;
+          // document.getElementById("ques_no").required = false;
+          // document.getElementById("mcq_opt1").required = false;
+          // document.getElementById("correct_opt").required = false;
+          $("#desc").show();
+        }
+      }
+      function isNumberKey(evt){
+        var charCode = (evt.which) ? evt.which : evt.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+      }
+      function addoptions(opt){
+          if(typeof opt === 'string') {
+              opt = parseInt(opt)
+          }
+          // alert(opt)
+          if(opt>=4)
+          {
+            alert("You can add only 4 options!");
+            // $("#myModal").modal();
+            // var myModal = $("#myModal");
+            // $("#modbod").text("Sorry You Can't add more than four options!");
+            // clearTimeout(myModal.data('hideInterval'));
+            // myModal.data('hideInterval', setTimeout(function(){
+            //     myModal.modal('hide');
+            // }, 3000));
+          }
+          else{
+            var option = opt+1;
+            // alert(option)
+            $("#addbtn"+opt).remove();
+            // $("#addbtn"+opt).css("display", "none");
+            if(opt>1)
+            {
+              // $("#minbtn"+opt).css("display", "none");
+              $("#minbtn"+opt).remove();
+              $("#btn_col"+opt).remove();
+            }
+            var newDiv = $('<div class="row" id="opt'+option+'"><div class="col-md-10"><div class="form-group"><label for="exampleInputConfirmPassword1">Option '+option+'</label><input type="text" class="mcq form-control" name="opt'+option+'" placeholder="Option'+option+'" style="width: 100%;" required></div></div><div class="col-md-2" id="btn_col'+option+'" style="display: flex;align-items: center;"><button class="btn2" onclick="addoptions('+option+')" id="addbtn'+option+'"><i class="fa fa-plus"></i></button><button class="btn2" type="button" onclick="minusoptions('+option+')" id="minbtn'+option+'"><i class="fa fa-minus"></i></button></div></div>');
+           $('#ttloptions').val(option);
+           $('#options').append(newDiv);
+           $('#correct_opt').append($("<option></option>").attr("value", "option"+option).text("Option "+option)); 
+          }
+      }
+      function minusoptions(opt){
+          // alert(opt)
+          $("#opt"+opt).remove();
+          var option = opt-1;
+          if(option==1)
+          {
+            var newDiv = $('<div class="col-md-2" id="btn_col'+option+'" style="display: flex;align-items: center;"><button class="btn2" onclick="addoptions('+option+')" id="addbtn'+option+'"><i class="fa fa-plus"></i></button></div>');
+            $("#opt"+option).append(newDiv);
+          }
+          else
+          {
+            var newDiv = $('<div class="col-md-2" style="display: flex;align-items: center;"><button class="btn2" onclick="addoptions('+option+')" id="addbtn'+option+'"><i class="fa fa-plus"></i></button><button class="btn2" type="button" onclick="minusoptions('+option+')" id="minbtn'+option+'"><i class="fa fa-minus"></i></button></div>');  
+            $("#opt"+option).append(newDiv);
+          }
+          
+          
+          // $("#addbtn"+option).css("display", "block");
+          // $("#minbtn"+option).css("display", "block");
+          $('#ttloptions').val(option);
+          $("#correct_opt option[value='option"+opt+"']").remove();
+      }
+      function cancel_edit()
+      {
+        var base_url = window.location.origin;
+        // alert(base_url);
+        redirect_url = base_url+'/quiz/preview_quiz_question/';
+        // alert(redirect_url);
+        window.location.replace(redirect_url);
+        // alert(base_url);
+        document.getElementById("quiz_det").action = "/quiz/preview_quiz_question/"; 
+      }
+      function complete_quiz()
+      {
+        var r = confirm("Are You Sure You Want to submit Quiz?");
+        if (r == true) {
+            var base_url = window.location.origin;
+            // alert(base_url);
+            redirect_url = base_url+'/quiz/cancel_quiz/';
+            // alert(base_url);
+            document.getElementById("quiz_det").action = "/quiz/complete_quiz/"; 
+        } else {
+            document.getElementById("quiz_det").action = "/quiz/add_quiz_info/"; 
+        } 
+      }
+      function preview_quiz()
+      {
+        var base_url = window.location.origin;
+        // alert(base_url);
+        redirect_url = base_url+'/quiz/preview_quiz_question/';
+        // alert(redirect_url);
+        window.location.replace(redirect_url);
+      }
+
+    </script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <!-- <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script> -->
+    <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+    <!-- End custom js for this page -->
+</body>
+
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Quicky </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="{{ url_for('static', filename='css/toastr.css')}}" rel="stylesheet" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <style type="text/css">
+        .details{
+            font-size: 1.25rem;
+        }
+        input {
+            display: none;
+        }
+        th{
+            background-color: #a12023;
+            border: 1px solid white;
+            color: white;
+            text-align: center;
+        }
+        td {
+            text-align: center;
+        }
+        table{
+            background-color: gainsboro;
+        }
+        select.form-control {
+            color: black !important;
+        }
+        .card{
+            width: 80%;
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/toastr.js')}}"></script>
+    <script>
+        $(document).ready(function () {
+            toastr.options = {
+                "closeButton": true,
+                "debug": true,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "showDuration": "300",
+                "hideDuration": "1000000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            var msg_there = "{{message.there}}";
+            if(msg_there=="1") {
+                var msg_mode = "{{message.mode}}";
+                if(msg_mode=="1")  {
+                    toastr["success"]("{{message.title}}", "Success");
+                }
+                else if(msg_mode=="0") {
+                    toastr["error"]("{{message.title}}", "Error");
+                }
+                else if(msg_mode=="2") {
+                    toastr["welcome"]("{{message.title}}", "Welcome");
+                }
+                else if(msg_mode=="3") {
+                    toastr["info"]("{{message.title}}", "info");
+                }
+            }
+        });
+
+        function upload_image() {
+            $("#dp").trigger('click');
+        }
+
+        function validateSize(id) {
+            var files = $('#dp')[0].files;
+            const oFile = files[0];
+            if (oFile.size > 2097152) { // 2 MiB for bytes.
+                toastr["error"]("File size must under 2MiB!", "Error");
+                return;
+            }
+            else
+            {
+                send_file(oFile);
+            }
+        }
+
+        function send_file(image) { 
+            alert("File uploaded");
+            var form = $('#user_image')[0];
+            var formData = new FormData(form);
+            console.log(formData);
+            var files = $('#dp')[0].files;
+            console.log(files);
+            
+            // Check file selected or not
+            if(files.length > 0 ) {
+                // formData.append('file',files);    
+                console.log(formData);
+                $.ajax({
+                    url : '/change_profile_pic/',
+                    type : 'POST',
+                    data : formData,
+                    processData: false,  // tell jQuery not to process the data
+                    contentType: false,  // tell jQuery not to set contentType
+                    success : function(data) {
+                        response = JSON.parse(data)
+                        console.log(data);
+                        if(response.uploaded == 1){
+                            location.reload()
+                        }
+                        else{
+                            toastr["error"]("Failed To update the Profile Picture", "Error");
+                        }
+                    }
+                });
+            }
+        }
+
+        function submit_elective(id) {
+            alert("ID:"+id);
+            console.log(id);
+            selected_option = $("#"+id).val();
+            alert("selected_option:"+selected_option);
+            if(selected_option != null)
+            {
+                var dat = {student_id:"{{session['svv']}}",elective_choice:selected_option};
+                $.ajax({
+                    url : '/student/change_electives/',
+                    type : 'POST',
+                    data : dat,
+                    success : function(data) {
+                        response = JSON.parse(data)
+                        console.log(data);
+                        if(response.got == 1){
+                            if(response.updated == 1){
+                                location.reload();
+                            }
+                            else if(response.updated == 2){
+                                toastr["warning"]("Already Updated", "Warning");    
+                                location.reload();
+                            }
+                            else{
+                                toastr["error"]("Failed to Update Elective", "Error"); 
+                            }
+                        }
+                        else{
+                            toastr["error"]("Failed Send data to the Server", "Error");
+                        }
+                    }
+                });
+            }
+            else
+            {
+                toastr["error"]("Please Select the elective!", "Error");
+                $("#"+id).focus();
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color: #C30;">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="color: white;border-bottom-color: gray;">
+              <h4 class="modal-title">Validation Message</h4>
+              <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body" style="color: white;">
+              <h4>{{message}}</h4>
+            </div>
+            <!-- Modal footer -->
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div> -->
+          </div>
+        </div>
+    </div>
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper" style="background: #d8e3e7;">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary2 text-white mr-2"><i class="mdi mdi-account-box-outline"></i></span> Profile 
+                        </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-data active" aria-current="page">
+                                    <span></span> </i>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="row">
+                        <div class="card" >
+                          <div class="card-body">
+                            <h4 class="card-title">Personal Details:</h4>
+                            <p class="card-description"> </p>
+                            <div class="row">
+                                <div class="col-md-5 col-sm-2" style="text-align: center;">
+                                    {% if session['login_mode']=='SVV' %}
+                                        <!-- <img src="{{session['img']}}" alt="{{session['username']}}" width="60%" style="position: relative;display: inline-block;"> -->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <img src="{{session['img']}}" alt="{{session['username']}}" width="60%" style="position: relative;display: inline-block;border-radius: 50%;">
+                                            </div>
+                                            <div class="col-md-12">
+                                                <button type="button" onclick="upload_image()" class="btn btn-gradient-dark mt-3" style="color: white;width: 40%;padding: .7rem;"><i class="mdi mdi-camera" aria-hidden="true" style="padding: .2rem;font-style: bold;font-weight: 900;"></i>Change Picture</button>
+                                                <form name="profile_pic" id="user_image" action="#" method="post" enctype="multipart/form-data">
+                                                    <input type="file" id="dp" name="user_image" accept="image/x-png,image/gif,image/jpeg" onChange='send_file()' />
+                                                </form>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    
+                                </div>
+                                <div class="col-md-7 col-sm-12">
+                                    <form id="change_password" action="/change_password/" method="post">
+                                        <div class="row" style="text-align: center;">
+                                        {% if session['mode']=='Student' %}
+                                            <div class="col-md-5"><h3 class="details">Full Name:</h3></div>
+                                            <div class="col-md-7"><h3 class="details">{{data.Name}}</h3></div>
+                                            <div class="col-md-5"><h3 class="details">Roll No. :</h3></div>
+                                            <div class="col-md-7"><h3 class="details"><i> {{session['roll']}}</i></h3></div>
+                                            <div class="col-md-5"><h3 class="details">Batch No. :</h3></div>
+                                            <div class="col-md-7"><h3 class="details"><i> {{session['batch']}}</i></h3></div>
+                                            <div class="col-md-5"><h3 class="details">Mobile No. :</h3></div>
+                                            <div class="col-md-7"><h3 class="details"><i> +91 {{data.num}}</i></h3></div>
+                                            <div class="col-md-5"><h3 class="details">Semester :</h3></div>
+                                            <div class="col-md-7"><h3 class="details"><i>{{session['sem']}}</i></h3></div>
+                                            <div class="col-md-5"><h3 class="details">Department :</h3></div>
+                                            <div class="col-md-7"><h3 class="details"><i>{{data.dept}}</i></h3></div>
+                                            <div class="col-md-5"><h3 class="details">Email Id:</h3></div>
+                                            <div class="col-md-7"><h3 class="details"><i> {{data.mail}}</i></h3></div>
+                                            <input type="hidden" name='email' value="{{data.mail}}">
+                                        {% else %}
+                                            <div class="col-md-5"><h3 class="details">Name :</h3></div>
+                                            <div class="col-md-7"><h3 class="details">{{session['username']}}</h3></div>
+                                            <div class="col-md-5"><h3 class="details">Department :</h3></div>
+                                            <div class="col-md-7"><h3 class="details"><i>{{data.dept}}</i></h3></div>
+                                            <div class="col-md-5"><h3 class="details">Mobile No:</h3></div>
+                                            <div class="col-md-7"><h3 class="details"><i> +91 {{data.num}}</i></h3></div>
+                                            <div class="col-md-5"><h3 class="details">Email Id:</h3></div>
+                                            <div class="col-md-7"><h3 class="details"><i> {{data.mail}}</i></h3></div>
+                                            <div class="col-md-5"><h3 class="details">College ID:</h3></div>
+                                            <div class="col-md-7"><h3 class="details"><i> {{session['svv']}}</i></h3></div>
+                                            <input type="hidden" name='email' value="{{data.mail}}">
+                                        {% endif %}
+                                            <div class="col-md-12">
+                                                <div style="width: 100%;margin-top: 4%;">
+                                                    <button type="submit" class="btn bg-gradient-primary2 btn-fw" style="left: 20%;color: white;">Change Password</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                            
+                          </div>
+                        </div>
+                    </div>
+                    {% if session['mode']=='Student' %}
+                    <div class="row mt-5">
+                        <div class="col-12 grid-margin">
+                          <div class="card">
+                            <div class="card-body">
+                              <h4 class="card-title">Elective Subjects</h4>
+                              <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                        {% for j in range(elective|length) %}
+                                        {% set elective = elective[j] %}
+                                            <th>{{elective['cat_name']}}</th>
+                                        {% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <form id="select_electives" method="post" enctype="multipart/form-data">
+                                        <tbody>
+                                            <tr>
+                                            {% for j in range(elective|length) %}    
+                                            {% set elective = elective[j] %}
+                                                {% if elective['selected'] == 1 %}
+                                                    <td>{{elective['selected_sub']}}</td>
+                                                {% elif elective['selected'] == 0 %}
+                                                    <td>
+                                                        <select class="form-control" name="elect_cat_{{j}}" id="elect_cat_{{j}}">
+                                                            <option value="" selected disabled>Select</option>
+                                                        {% for k in range(elective['categories']|length) %}
+                                                            <option value="{{elective['course_code'][k]}}">{{elective['categories'][k]}}</option>
+                                                        {% endfor %}
+                                                        </select>
+                                                        <button type="button" onclick="submit_elective(`elect_cat_{{j}}`)" class="btn bg-gradient mt-3" style="color: white;background:linear-gradient(to right, #0a4f9d , #0a4f9d) !important;width: 30%;padding: .7rem;">Submit</button>
+                                                    </td>
+                                                {% endif %}
+                                            {% endfor %}
+                                            </tr>
+                                        </tbody>
+                                    </form>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer" style="background: #d8e3e7;">
+                    <!-- <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+                    </div> -->
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+    <!-- End custom js for this page -->
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar" style="background-color: #F8F8F8;">
+                <ul class="nav">
+                    <li class="nav-item nav-profile">
+                        <a href="{{url_for('show_profile')}}" class="nav-link">
+                            <div class="nav-profile-image">
+                                {% if session['login_mode']=='google' %}
+                                    <img src="{{session['img']}}" alt="image">
+                                {% elif session['login_mode']=='SVV' %}
+                                    <img src="{{session['img']}}" alt="{{session['username']}}">
+                                    
+                                {% else %}
+                                    {% if session['gender'] =='M' %}
+                                        <img src="{{url_for('static', filename='images/man.png')}}" alt="image">
+                                    {% else %}
+                                        <img src="{{url_for('static', filename='images/woman.png')}}" alt="image">
+                                    {% endif %}
+                                {% endif %}
+                                <span class="login-status online"></span>
+                                <!--change to offline or busy as needed-->
+                            </div>
+                            <div class="nav-profile-text d-flex flex-column">
+                                <span class="font-weight-bold mb-2">{{ session['username'] }}</span>
+                                <span class="text-secondary text-small" style="color: #95a4b7 !important;">{{ session['mode'] }}</span>
+                            </div>
+                            <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('load')}}">
+                            <span class="menu-title">Dashboard</span>
+                            <i class="mdi mdi-home menu-icon" style="color: #a12023;"></i>
+                        </a>
+                    </li>
+                    {% if session['mode']=='Student' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('quiz.quizes_all')}}">
+                                <span class="menu-title">All Quizes</span>
+                                <i class="mdi mdi-newspaper menu-icon" style="color: #a12023;"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if session['mode']=='Faculty' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('quiz.create_quiz')}}">
+                                <span class="menu-title">Create Quiz</span>
+                                <i class="mdi mdi-pencil menu-icon" style="color: #a12023;"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('quiz.quizes_all')}}">
+                                <span class="menu-title">Quiz Responses</span>
+                                <i class="mdi mdi-newspaper menu-icon" style="color: #a12023;"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if session['mode']=='Admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="collapse" href="#master_data" aria-expanded="false" aria-controls="ui-basic">
+                                <span class="menu-title">Master Data</span>
+                                <i class="menu-arrow"></i>
+                                <i class="mdi mdi-database menu-icon" style="color: #a12023;"></i>
+                            </a>
+                            <div class="collapse" id="master_data">
+                                <ul class="nav flex-column sub-menu">
+                                  <li class="nav-item"> <a class="nav-link" href="{{ url_for('admin.get_master_mode', mode='Student')}}">Students</a></li>
+                                  <li class="nav-item"> <a class="nav-link" href="{{ url_for('admin.get_master_mode', mode='Faculty')}}">Faculty</a></li>
+                                  <li class="nav-item"> <a class="nav-link" href="{{ url_for('admin.get_master_mode', mode='Subject')}}">Subjects</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    {% endif %}
+                    <!-- <li class="nav-item">
+              <a class="nav-link" data-toggle="collapse" href="{{url_for('load')}}#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <span class="menu-title">Basic UI Elements</span>
+                <i class="menu-arrow"></i>
+                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+              </a>
+              <div class="collapse" id="ui-basic">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="{{ url_for('load')}}">Buttons</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="{{ url_for('load')}}">Typography</a></li>
+                </ul>
+              </div>
+            </li> -->
+
+                </ul>
+            </nav>

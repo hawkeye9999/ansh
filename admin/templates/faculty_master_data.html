@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <title>Faculty Master</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">    
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/file_upload.css">
+    <style type="text/css">
+      .form-control{
+        font-size: 1.000rem;
+      }
+      .form-group label{
+       font-size: 1.0125rem; 
+      }
+      .btn2 {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 2%;
+      }
+      h4,h3
+      {
+        font-size:  1.525rem;
+      }
+      th {
+        cursor: pointer;
+        font-style: underline;
+        text-align: center;
+      }
+      td {
+        text-align: center;
+      }
+      input{
+        text-transform:uppercase;
+      }
+      input[type=email], select {
+        text-transform:lowercase;
+      }
+      ::placeholder {
+        text-transform:lowercase; /* Firefox */
+      }
+
+      :-ms-input-placeholder { /* Internet Explorer 10-11 */
+        text-transform:lowercase;
+      }
+
+      ::-ms-input-placeholder { /* Microsoft Edge */
+        text-transform:lowercase;
+      }
+      .btn-responsive{
+        white-space: normal !important;
+        word-wrap: break-word;
+        padding: 1rem;
+        border-radius: 0.7rem;
+        margin: 0.1rem;
+        color:white;
+      }
+      .inputgroup_text{
+        background-color: #8999a9;
+        color: white;
+        font-size: 1rem;
+      }
+      /* .pic {
+        margin: 0.1rem;
+        display: inline-block;
+        vertical-align: middle;
+        width: 0; 
+        height: 0; 
+      }
+      .arrow-down {
+        border-left: 0.4rem solid transparent;
+        border-right: 0.4rem solid transparent;
+        border-top: 0.4rem solid #212529;
+      } */
+      .required:after {
+        content:" *";
+        color: red;
+        font-size: 1.0rem;
+      }
+      @media only screen and (min-width: 600px){
+        .add_fac, .edit_fac, .upload_xl_stud { 
+          max-width: 100%; 
+        }
+        .add_fac, .edit_fac {
+          width: 90%;
+          height: auto;
+          padding: 0;
+        }
+
+        .upload_xl_stud {
+          width: 40%;
+          height: auto;
+          padding: 0;
+        }
+
+        .add_stud-content, .edit_stud-content, .upload_xl_stud-content {
+          height: auto;
+        }
+      }
+      @media only screen and (max-width: 600px){
+        .add_fac, .edit_fac, .upload_xl_stud { 
+          max-width: 100%; 
+        }
+        .add_fac,.edit_fac{
+          width: 90%;
+          height: auto;
+          padding: 0;
+        }
+        .upload_xl_stud{
+          width: 90%;
+        }
+      }      
+      .btn-inverse-info:hover {
+        color: #ffffff;
+        background-color: #0a4f9d;
+        border-color: #0a4f9d;
+      }
+
+    </style>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <script src="{{ url_for('static', filename='js/3.5.1_jquery.min.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.dataTables.min.css')}}">
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/toastr.css')}}" rel="stylesheet" />
+    <script src="{{ url_for('static', filename='js/toastr.js')}}"></script>
+</head>
+
+<body>
+  {% include "loader.html" ignore missing %}
+  {% include "faculty/add_fac_modal.html" ignore missing %}
+  {% include "faculty/edit_fac_modal.html" ignore missing %}
+  {% include "upload_excel_modal.html" ignore missing %}
+  <div class="modal fade" id="confirm">
+    <div class="modal-dialog">
+      <div id="mod_color" class="modal-content">
+        <!-- Modal Header -->
+        <!-- Modal body -->
+        <div class="modal-body" style="color: white;background: linear-gradient(to right, #cb2d3e, #a12023)">
+          <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <div class="row" style="display: contents;text-align: center;">
+            <div class="col-md-6">
+              <button type="button" data-dismiss="modal" class="btn">Cancel</button>
+            </div>
+            <div class="col-md-6">
+              <button type="button" data-dismiss="modal" class="btn btn-inverse-info btn-fw" onclick="delete_faculty()" id="delete" value="">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+    {% include "nav.html" ignore missing %}
+    
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+      {% include "side_nav.html" ignore missing %}
+        <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper" style="background: #d8e3e7;">
+          <div class="page-header">
+            <h3 class="page-title">
+              <span class="page-title-icon bg-gradient-primary2 text-white mr-2"><i class="mdi mdi-account-network"></i></span>Faculty
+            </h3>
+            <nav aria-label="breadcrumb">
+              <ul class="breadcrumb">
+                <li class="breadcrumb-data active" aria-current="page">
+                  <span></span> </i>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="row" style="margin-top: 2%;">
+            <div class="col-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-title">
+                    <div class="row" style="text-align: center;">
+                      <div class="col-sm-12 col-md-6" style="text-align: left;">
+                        <div class="form-outline mb-2">
+                          <input type="search" class="form-control" id="myInput" placeholder="Search..." style="width: 100%;">
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-2">
+                        <button class="btn btn-gradient-green btn-fw btn-responsive" id="btnExport" style="background: linear-gradient(to right, #46c35f, #2aa260);" onclick="export_excel(this)">Export to Excel<i class="mdi mdi-file-excel" aria-hidden="true" style="padding-left: 5px;font-style: bold;font-weight: 900;"></i></button>
+                        {% if session['data_master_mode'] == 'faculty' %}
+                            {% if session['dept'] == 'IT' %}                                
+                                <a href="{{ url_for('static', filename='spreadsheets/Download/IT_faculty_master.xlsx')}}" id="export_excel_down" target="_blank" download hidden>IT_Faculty_Records.xlsx</a>
+                            {% endif %}
+                        {% endif %}
+                      </div>
+                      <div class="col-sm-12 col-md-2">
+                        <button class="btn btn-gradient-primary btn-fw btn-responsive" id="btn_excel_upload" style="background: linear-gradient(to right, #485563, #29323c);" data-toggle="modal" data-target="#Upload_xl_stud" >Upload Excel<i class="mdi mdi-upload" aria-hidden="true" style="padding: 5px;font-style: bold;font-weight: 900;"></i></button>
+                      </div>
+                      <div class="col-sm-12 col-md-2" >
+                        <button class="btn btn-gradient-primary btn-fw btn-responsive" id="btnAdd" style="background: linear-gradient(to right, #cb2d3e, #a12023);" data-toggle="modal" data-target="#Add_fac">Add faculty<i class="mdi mdi-account-plus " aria-hidden="true" style="padding: 5px;font-style: bold;font-weight: 900;"></i></button>
+                      </div>                                    
+                    </div> 
+                  </div>                              
+                  <div class="table-responsive" style="margin-top: 2%;">
+                    <table class="table table-striped table-sm" width="100%" style="border: 0.1rem solid #d8e3e7;" id="myTable_whole">
+                      <thead>
+                        <tr>
+                          <th> S.No </th>
+                          <th> Desg. </th>
+                          <th> Name </th>
+                          <th> College ID </th>
+                          <th> Email-Id </th>
+                          <th> Contact Number </th>
+                          <th> Gender </th> 
+                          <th>Edit</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody id="myTable">
+                        {% if faclen!=0 %}
+                          <!-- <form id="fac_det" action="/quiz/check_answer/" method="post">
+                            <input type="hidden" name="faculty_id" id="fac_id" value="">
+                          </form> -->
+                          {% for j in range(faclen) %}
+                          {% set faculty = faculties[j] %}
+                          <tr>
+                            <td> {{(j+1)}}. </td>
+                            {% if faculty.Designation[-1] == '.' %}
+                            <td>{{faculty.Designation}}</td>
+                            {% else %}
+                            <td>{{faculty.Designation}}.</td>
+                            {% endif %}
+                            <td>{{faculty.F_name}} {{faculty.M_name}} {{faculty.L_name}}</td>
+                            <td> {{faculty.F_id}} </td>
+                            <td><a href="mailto:{{faculty.F_email}}" style="color: inherit"> {{faculty.F_email}} </a></td>
+                            <td><a href="tel:{{faculty.F_num}}" style="color: inherit"> {{faculty.F_num}} </a></td>
+                            {% if faculty.gender=='M'  %}
+                            <td> Male </td>
+                            {% elif faculty.gender=='F' %}
+                            <td> Female </td>
+                            {% else %}
+                            <td> Others </td>
+                            {% endif %}
+                            <td><button type="button" class="btn btn-gradient-success btn-rounded btn-icon" onclick="edit_modal_open('{{faculty.F_id}}')" data-toggle="modal" data-target="#Edit_fac" title="Edit"><i class="mdi mdi-lead-pencil"></i></button></td>
+                            <td><button type="button" class="btn btn-gradient-danger btn-rounded btn-icon" onclick="modal_open('{{faculty.F_id}}')" data-toggle="modal" data-target="#confirm" title="Delete"><i class="mdi mdi-delete"></i></button> </td>
+                          </tr>
+                          {% endfor %}
+                        {% else %}
+                          <tr>
+                            <td colspan="10" style="padding: 1rem;text-align: center;font-weight: 900;">No faculty Added Yet!</td>
+                          </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <footer class="footer" style="background: #d8e3e7;">
+            <!-- <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020. All rights reserved.</span>
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+            </div> -->
+        </footer>
+          <!-- partial -->
+      </div>
+        <!-- main-panel ends -->
+    </div>
+      <!-- page-body-wrapper ends -->
+  </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+  <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script> -->
+  <script  src="{{ url_for('static', filename='js/function.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+  <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+  <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script> -->
+  <!-- <script src= "{{ url_for('static', filename='js/jquery.table2excel.min.js')}}"></script>  -->
+  <!-- <script src= "//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>  -->
+
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+  <!-- <script src="{{ url_for('static', filename='js/bootstrap.js')}}"></script> -->
+  <!-- <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js')}}" type="text/javascript"></script> -->
+  <script src="{{ url_for('static', filename='js/1.11.3_jquery.dataTables.min.js')}}" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+  $(document).ready(function () {
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    
+    var records = parseInt("{{faclen}}");
+    if(records > 0) {
+      $('#myTable_whole').dataTable( {
+        "bFilter": false,
+        "bInfo": true,
+        "ordering": true,
+        "bSort":true,
+        "bPaginate":true,
+        "pagingType": "full_numbers",
+        'columnDefs': [ {
+          'targets': [7,8], /* column index */
+          'orderable': false, /* true or false */
+        }]
+      });
+    }
+    
+    $(document).ajaxSend(function(){
+      $('.ajax-loader').css("visibility", "visible");
+    });
+    $(document).ajaxComplete(function(){
+      $('.ajax-loader').css("visibility", "hidden");
+    }); 
+    $('.ajax-loader').css("visibility", "hidden");
+    var msg_there = "{{msg.there}}";
+    // alert(msg_there);
+    if(msg_there=="1"){
+      var msg_mode = "{{msg.mode}}";
+      if(msg_mode=="1"){
+        toastr["success"]("{{msg.title}}", "Success");
+      }
+      else if(msg_mode=="0"){
+        toastr["error"]("{{msg.title}}", "Error");
+      }
+      else if(msg_mode=="2"){
+        toastr["warning"]("{{msg.title}}", "Warning");
+      }
+    }
+  });
+
+  function edit_modal_open(f_id) {
+    var dat = {fac_id: f_id};  
+    $.ajax({
+      url: '/admin/fetch_faculty/',
+      data: dat,
+      type: 'POST',
+      success: function(data){
+        response = JSON.parse(data)
+        console.log(response);
+        if(response.there ==1){ // if true (1)
+          $("input[name='e_desg']").val(response.Designation);
+          $("input[name='e_fname']").val(response.F_name);
+          $("input[name='e_mname']").val(response.M_name);
+          $("input[name='e_lname']").val(response.L_name);
+          $("input[name='e_mail']").val(response.F_email);
+          $('#select_edit_gender').val(response.gender);
+          $("input[name='e_fac_id']").val(response.F_id);
+          $("input[name='e_mob_num']").val(response.F_num);
+          $("input[name='e_first_login']").val(response.first_login);
+          $("#filename").text(response.img);
+          // $("#Edit_fac").modal('show');
+        }
+        else{
+          alert("Record Not Present!");
+        }
+      },
+      error: function(error){
+        console.log(error);
+        alert("Some error");
+      }
+    });
+  }
+
+  function delete_faculty() {
+    // alert($("#delete").val());
+    var dat = {fac_id:$("#delete").val()};  
+    $.ajax({
+      url: '/admin/delete_faculty/',
+      data: dat,
+      type: 'POST',
+      success: function(data){
+        response = JSON.parse(data)
+        console.log(typeof response);
+        if(response.deleted == 1){ // if true (1)
+          alert("Record Successfully Deleted!");
+          location.reload();
+        }
+        else
+        {
+          alert("Record Not Present!");
+        }
+      },
+      error: function(error){
+        console.log(error);
+        alert("Some error");
+      }
+    });
+  }
+
+  $("form#upload_excel_form").submit(function(e) {
+    e.preventDefault();    
+    // alert("Called");
+    var formData = new FormData(this);
+    // alert(formData);
+    console.log(formData)
+    $.ajax({
+      url: '/admin/upload_excel/',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (data) {
+        response = JSON.parse(data)
+        console.log(typeof response);
+        if(response.file_recieved == 1) { 
+          if(response.file_error==0) {
+            succ_rec = response.total_rec - response.failed_rec;
+            // alert(response.total_rec)
+            $('.close').click(); 
+            $('#total_rec').html("Out of <b>"+response.total_rec+"</b> records:");
+            $('#fail_rec').html("<b>"+response.failed_rec+"<b> records failed!");
+            $('#succ_rec').html("<b>"+succ_rec+"<b> records successfully Inserted!");
+            if(response.failed_rec==0) {
+              $("#excel_file").remove();
+            }
+            var show_result_modal = document.getElementById('show_result');
+            show_result_modal.className="modal fade show"; 
+            show_result_modal.style.display = "block";
+            var btn_close = document.getElementById('close_report_excel');
+            btn_close.addEventListener('click', (e) => {
+              show_result_modal.style.display = "none";
+              show_result_modal.className="modal fade";
+            });
+          }
+          else {
+            alert("Something wrong with the file, kindly follow the format!");
+          }
+        }
+        else {
+          alert("Unable to upload the file!");
+        }
+      },
+      error: function(error){
+        console.log(error);
+        alert("Some error");
+      }
+    });
+  });
+
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : evt.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57)){
+      alert("Enter numbers only.");
+      return false;
+    }
+    return true;
+  }
+  function isAlphabetKey(evt){
+    var charCode = (evt.which) ? evt.which : evt.keyCode
+    if (charCode > 31 && (charCode < 65 || charCode > 90) &&
+        (charCode < 97 || charCode > 122)) {
+        alert("Enter letters only.");
+        return false;
+      }
+      return true;
+  }
+  
+  function validateEmail(email,mode) { 
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if(re.test(email.value)){
+        //Email valid. Procees to test if it's from the right domain (Second argument is to check that the string ENDS with this domain, and that it doesn't just contain it)
+        if(email.value.indexOf("@somaiya.edu", email.value.length - "@somaiya.edu".length) !== -1) {
+          return true;
+        }
+        else {
+          alert("Email address must be of Somaiya!");
+          if(mode=='add')
+            document.Add_Faculty_form.mail.focus();
+          else if(mode=='edit')
+            document.Edit_Faculty_form.mail.focus();
+          return false;
+        }
+    }
+    else {
+      alert("Invalid Email Id");
+      email.focus();
+      return false;
+    }
+  }
+  function validateSize(input,id) {
+    const oFile = document.getElementById(id).files[0]; // <input type="file" id="fileUpload" accept=".jpg,.png,.gif,.jpeg"/>
+    if (oFile.size > 2097152) { // 2 MiB for bytes.
+      alert("File size must under 2MiB!");
+      return;
+    }
+    else
+    {
+      var file = $("#"+id).prop('files')[0]  
+      $('#filename').text(file.name)
+    }
+  }
+  var secondCall = false;
+  function beforesubmit(mode) {
+    // alert("Before submit");
+    if (secondCall) {
+      return;
+    }
+    if(mode=='add') {
+        var desg = document.Add_Faculty_form.desg;
+        var email = document.Add_Faculty_form.mail;
+        var email = document.Add_Faculty_form.mail;
+        var fname = document.Add_Faculty_form.fname;
+        var lname = document.Add_Faculty_form.lname;
+        var mname = document.Add_Faculty_form.mname;
+        var gender = document.Add_Faculty_form.gender;
+        var mob_num = document.Add_Faculty_form.mob_num;
+        var fac_id = document.Add_Faculty_form.fac_id;
+    }
+    else if(mode=='edit') {
+      // alert(mode);
+      var desg = document.Edit_Faculty_form.e_desg;
+      var email = document.Edit_Faculty_form.e_mail;
+      var fname = document.Edit_Faculty_form.e_fname;
+      var lname = document.Edit_Faculty_form.e_lname;
+      var mname = document.Edit_Faculty_form.e_mname;
+      var gender = document.Edit_Faculty_form.e_gender;
+      var mob_num = document.Edit_Faculty_form.e_mob_num;
+      var fac_id = document.Edit_Faculty_form.e_fac_id;
+    }
+    
+    // alert(p_email.value)
+    // alert(fname+" "+mname+" "+lname);
+    if(fname.value== "" || lname.value== "" || mname.value=="" || email.value=="" || gender.value.trim()=="" || mob_num.value=="" || fac_id.value=="" || desg.value.trim()=="")
+    {
+      if(desgn.value.trim()== "") {
+        alert("Designation cannot be blank!");
+        desg.focus();
+      }
+      else if(fname.value== "") {
+        alert("First Name cannot be blank!");
+        fname.focus();
+      }
+      else if(mname.value== "") {
+        alert("Middle Name cannot be blank!");
+        mname.focus();
+      }
+      else if(lname.value== "") {
+        alert("Last Name cannot be blank!");
+        lname.focus();
+      }
+      else if(gender.value.trim() == "")  {
+        alert("Please select Gender!");
+        gender.focus();
+      }
+      else if(email.value== "") {
+        alert("Email Address cannot be blank!");
+        lname.focus();
+      }
+      else if(mob_num.value== "") {
+        alert("Contact Number cannot be blank!");
+        mob_num.focus();
+      }
+      else if(fac_id.value== "") {
+        alert("faculty ID cannot be blank!");
+        fac_id.focus();
+      }
+      return false; 
+    }
+    var email_check = validateEmail(email,mode);
+    // alert(email_check)
+    if(email_check) {
+      // alert("Checking!");
+      var dat = {mail:email.value, fac_id: fac_id.value, data_edit_mode: "faculty"};  
+      if(mode=='add') {
+        $.ajax({
+          url: '/admin/check_record_present/',
+          data: dat,
+          type: 'POST',
+          success: function(data){
+            response = JSON.parse(data)
+            console.log(typeof response);
+            if(response.present == 1){ // if true (1)
+              alert("Record already present, therefore cannot Add!");
+              return false;
+            }
+            else
+            {
+              // alert("Record Not Present!");
+              secondCall = true;
+              $('#Add_Faculty_form').submit();  
+            }
+          },
+          error: function(error){
+            console.log(error);
+            // alert("returning false1");
+            event.preventDefault();
+            return false;
+          }
+        });
+      }
+      else if(mode=='edit') {
+        // alert("AJAX edit");
+        $.ajax({
+          url: '/admin/check_faculty_present_edit/',
+          data: dat,
+          type: 'POST',
+          success: function(data) {
+            response = JSON.parse(data)
+            console.log(response);
+            if(response.f_id_present == 1 || response.mail_present == 1) { // if true (1)
+              if(response.mail_present == 1) {
+                alert("Other record holding the same E-mail ID!");
+                email.focus();
+              } 
+              else {
+                alert("Other record holding the same faculty ID!");
+                fac_id.focus();
+              }
+              return false;
+            }
+            else if(response.f_id_present == 0 && response.mail_present == 0) {
+              // alert("Record Not Present!");
+              secondCall = true;
+              $('#Edit_Faculty_form').submit();  
+            }
+          },
+          error: function(error) {
+            console.log(error);
+            // alert("returning false1");
+            event.preventDefault();
+            return false;
+          }
+        });
+      }
+    //   alert("returning false2");
+      return false;
+    }
+    else
+    {
+    //   alert("returning false3");
+      return false;
+    }
+  }
+
+  function export_excel() {
+    // var table= document.getElementById('myTable_whole');
+    // $("#myTable_whole").table2excel({
+    //   exclude: ".noExport",
+    //   filename: '{{fac_type}}'+'_faculties_MasterData',
+    // });
+    var dat = {data_master_mode:"faculty"}; 
+    $.ajax({
+      url: '/admin/export_excel/',
+      data: dat,
+      type: 'POST',
+      success: function (data) {
+        response = JSON.parse(data)
+        console.log(typeof response);
+        if(response.data_got == 1) { 
+          if(response.file_created==1) {
+            var url = document.getElementById('export_excel_down').href;
+            window.location = url;
+          }
+          else {
+            alert("Something wrong with the file, kindly follow the format!");
+          }
+        }
+        else {
+          alert("Unable to upload the file!");
+        }
+      },
+      error: function(error){
+        console.log(error);
+        alert("Some error");
+      }
+    });
+  }
+
+
+  </script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    
+  <script src="{{ url_for('static', filename='js/common_masters.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+  
+  <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page -->
+  <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+    <!-- End custom js for this page -->
+</body>
+
+</html>

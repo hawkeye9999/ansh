@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Quiz Responses </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function message() {
+          // alert("Body loaded!");
+          var msg = "{{message}}";
+          // alert(msg);
+          if(msg!="")
+          {
+            $("#myModal").modal();
+            var myModal = $("#myModal");
+            clearTimeout(myModal.data('hideInterval'));
+            myModal.data('hideInterval', setTimeout(function(){
+                myModal.modal('hide');
+            }, 3000));
+          }
+        }
+    </script>
+</head>
+
+<body onload="message()">
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background: linear-gradient(to right, #fdbf43, #fc9302) !important">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="color: white;border-bottom-color: gray;">
+              <h4 class="modal-title">Message</h4>
+              <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body" style="color: white;">
+              <h4>{{message}}</h4>
+            </div>
+            <!-- Modal footer -->
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div> -->
+          </div>
+        </div>
+    </div>
+    {% include "loader.html" ignore missing %}
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper" style="background: #d8e3e7;">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary2 text-white mr-2">
+                  <i class="mdi mdi-home"></i>
+                </span> Quiz Responses </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <span></span>Quizes <i class="mdi mdi-newspaper  icon-sm text-primary2 align-middle"></i>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="row">
+                    {% if quizes %}
+                        {% set count = 0 %}
+                        {% for quiz in quizes %}
+                            <!-- <h2>Count before loop:{{count}}</h2> -->
+                            {% if (loop.index-1)%6==0 %}
+                                {% set count = 0 %}
+                            {% elif loop.index<=6 %}
+                                {% set count = loop.index-1 %}
+                            {% else %}
+                                {% set index = (loop.index/6)|round|int %}
+                                <!-- <h2>Index:{{ index }}</h2> -->
+                                {% set count = (loop.index-1)-(index*6) %}
+                            {% endif %}
+                            <!-- <h2>{{loop.index}}</h2> -->
+                            <!-- <h3>{{count}}{{color[count]}}</h3> -->
+                        <div class="col-md-4 stretch-card grid-margin">
+                            <div class="card {{color[count]}} card-img-holder text-white">
+                                {% if session['mode']=='Student' %}
+                                <a class="card-block stretched-link text-decoration-none" href="/quiz/get_quiz?quiz_id={{quiz.quiz_id}}">
+                                {% else %}
+                                <a class="card-block stretched-link text-decoration-none" href="/quiz/get_response?quiz_id={{quiz.quiz_id}}">
+                                {% endif %}
+                                    <div class="card-body" style="color: white;">
+                                        <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                        <h3 class="font-weight-normal mb-3">Sub: <b>{{quiz.q_sub}}</b><i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+                                        </h3>
+                                        <h2 class="mb-5">Topic: <b>{{quiz.q_title}}</b></h2>
+                                        <h4 class="card-text">On : <b>{{quiz.q_date}}          {{quiz.q_time_start}} - {{quiz.q_time_end}}</b></h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- <h1>{{count}}</h1> -->
+                        {% endfor %}
+                        {% else %}
+                        <div class="col-md-12 stretch-card grid-margin">
+                            <div class="card card-img-holder text-white">
+                                <div class="card-body" style="color: black;">
+                                    <h4>No Quizes Till Now!</h4>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <!-- <div class="col-md-4 stretch-card grid-margin">
+                            <div class="card bg-gradient-info card-img-holder text-white">
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                    <h4 class="font-weight-normal mb-3">Subject Name<i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+                                    </h4>
+                                    <h2 class="mb-5">Quiz Title</h2>
+                                    <h6 class="card-text">Time and Date</h6>
+                                </div>
+                            </div>
+                        </div> -->
+                        <!-- div class="col-md-4 stretch-card grid-margin">
+                            <div class="card bg-gradient-success card-img-holder text-white">
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                    <h4 class="font-weight-normal mb-3">Visitors Online <i class="mdi mdi-diamond mdi-24px float-right"></i>
+                                    </h4>
+                                    <h2 class="mb-5">95,5741</h2>
+                                    <h6 class="card-text">Increased by 5%</h6>
+                                </div>
+                            </div>
+                        </div> -->
+
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer" style="background: #d8e3e7;">
+                    <!-- <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+                    </div> -->
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.ajax-loader').css("visibility", "hidden");
+        });
+    </script>
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+    <!-- End custom js for this page -->
+</body>
+
+</html>

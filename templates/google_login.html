@@ -1,0 +1,294 @@
+<html>
+<head>
+<title>Create Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {
+    background-color: #e6e6e6;
+    margin: 0;
+}
+
+.container {
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 25px;
+}
+
+.button {
+    width: 25%;
+    padding: 8px;
+    margin-top: 10px;
+    background-color: #3274d6;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.center {
+  margin: auto; 
+  margin-top: 50px;
+  width: 65%;
+}
+
+textarea {
+  width: 80%;
+  resize:vertical;
+  max-height:30%;
+  min-height:5%;
+}
+
+select {
+  width: 20%;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #ccc;
+}
+
+.example input[type=text] {
+  padding: 10px;
+  border-radius: 0px;
+  border: 1px solid grey;
+  font-size: 17px;
+  float: left;
+  width: 95%;
+  background: #f1f1f1;
+}
+
+.example button {
+  float: left;
+  width: 5%;
+  padding: 7.5px;
+  background: #2196F3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none;
+  cursor: pointer;
+}
+
+.example button:hover {
+  background: #0b7dda;
+}
+
+.example::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* If the screen size is 601px or more, set the font-size of <div> to 80px */
+@media only screen and (min-width: 111px) {
+  div.example {
+    font-size: 40px;
+  }
+}
+
+/* If the screen size is 600px or less, set the font-size of <div> to 30px */
+@media only screen and (max-width: 600px) {
+div.example {
+    font-size: 30px;
+}
+
+.center {
+  margin: auto; 
+  margin-top: 20px;
+  width: 90%;
+}
+
+textarea {
+  width: 100%;
+  resize:vertical;
+  max-height:30%;
+  min-height:6%;
+}
+
+select {
+  width: 100%;
+  }
+
+.example input[type=text] {
+  padding: 10px;
+  border-radius: 0px;
+  border: 1px solid grey;
+  font-size: 17px;
+  float: left;
+  width: 88%;
+  background: #f1f1f1;
+}
+
+.example button {
+  float: left;
+  width: 12%;
+  padding: 7.5px;
+  background: #2196F3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none;
+  cursor: pointer;
+}
+
+.example button:hover {
+  background: #0b7dda;
+}
+
+.example::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    background-color: #3274d6;
+    border: 0;
+    cursor: pointer;
+    color: #ffffff;
+}
+}
+</style>
+<script type = "text/javascript">
+   <!--
+      // Form validation code will come here.
+      function validate() {
+      
+         if( document.myForm.question.value == "" ) {
+            alert( "Please provide your name!" );
+            document.myForm.question.focus() ;
+            return false;
+         }
+         if( document.myForm.optiona.value == "" ) {
+            alert( "Please provide your Email!" );
+            document.myForm.optiona---.focus() ;
+            return false;
+         }
+         if( document.myForm.optionb.value == "" ) {
+            alert( "Please provide your name!" );
+            document.myForm.optionb.focus() ;
+            return false;
+         }
+         if( document.myForm.optionc.value == "" ) {
+            alert( "Please provide your name!" );
+            document.myForm.optionc.focus() ;
+            return false;
+         }
+          if( document.myForm.optiond.value == "" ) {
+            alert( "Please provide your name!" );
+            document.myForm.optiond.focus() ;
+            return false;
+         }
+          if( document.myForm.correctanswer.value == "-1" ) {
+            alert( "Please provide your name!" );
+            document.myForm.correctanswer.focus() ;
+            return false;
+         }
+         return( true );
+      }
+   //-->
+   function () {
+ document.getElementById('a').value = ""; 
+}
+</script>
+<SCRIPT language="javascript">
+function add(type) {
+
+  //Create an input type dynamically.
+  var element = document.createElement("input");
+
+  //Assign different attributes to the element.
+  element.setAttribute("type", type);
+  element.setAttribute("value", type);
+  element.setAttribute("name", type);
+
+
+  var foo = document.getElementById("fooBar");
+
+  //Append the element in page (in span).
+  foo.appendChild(element);
+
+}
+ $(document).ready(function () {
+    $('input.disablecopypaste').bind('copy paste', function (e) {
+       e.preventDefault();
+    });
+  });
+</SCRIPT>
+</head>
+<body>
+
+<div class="container center">
+<div class="col-md-12">
+<div class="input_fields_wrap">
+<div class="row">
+<div class="col-md-12">
+
+<form action="{{ url_for('quiz_sample') }}" name = "myForm" onsubmit = "return(validate());" method="post">
+<div class="form-group">
+<!--<label for="" style="font-size: 20px;">Question :</label>-->
+<textarea rows="3" cols="1" id="question" name="question" class="form-control disablecopypaste" placeholder="Write question here..." required style="background-color: #f2f2f2; color: black;font-size: 16px;"></textarea>
+<!--<input id="question" name="question" placeholder="Write question here..." class="form-control input-md" type="text" cols="40" rows="5" required="" onselectstart="return false" onpaste="return false;" onCopy="return false" autocomplete=off>  
+<button type="file" onclick="document.getElementById('getFile').click()"><i class="fa fa-paperclip fa-lg" aria-hidden="true"></i></button>
+<input type='file' id="getFile" style="display:none">-->
+</div>
+
+<!--Select type of question : &emsp;  
+<input type="radio" id="Multiple Choice" name="radio" value="Multiple Choice">
+<label for="Multiple Choice">&nbsp;Multiple Choice&emsp;&emsp;</label>
+<input type="radio" id="True/False" name="radio" value="True/False">
+<label for="True/False">&nbsp;True/False&emsp;&emsp;</label>
+<input type="radio" id="Multiple Answers" name="radio" value="Multiple Answers">
+<label for="Multiple Answers">&nbsp;Multiple Answers</label>-->
+<!--<SELECT name="element">
+  <OPTION value="checkbox">Button</OPTION>
+  <OPTION value="text">Textbox</OPTION>
+  <OPTION value="radio">Radio</OPTION>
+</SELECT>
+<INPUT type="button" value="Add" onclick="add(document.forms[0].element.value)"/>-->
+<p></p>
+
+<div class="form-group">
+<label class="col-md-12 control-label" for=""></label>  
+<input id="optiona" name="optiona" placeholder="Enter option a" class="form-control input-md" type="text" required autocomplete="off">   
+</div>
+
+<div class="form-group">
+<label class="col-md-12 control-label" for=""></label>  
+<input id="optionb" name="optionb" placeholder="Enter option b" class="form-control input-md" type="text" required autocomplete="off">   
+</div>
+
+<div class="form-group">
+<label class="col-md-12 control-label" for=""></label>  
+<input id="optionc" name="optionc" placeholder="Enter option c" class="form-control input-md" type="text" autocomplete="off">
+</div>
+
+<div class="form-group">
+<label class="col-md-12 control-label" for=""></label>  
+<input id="optiond" name="optiond" placeholder="Enter option d" class="form-control input-md" type="text" autocomplete="off">
+</div>
+
+<b>Correct answer :</b><br />
+<select id="correctanswer" name="correctanswer" placeholder="Choose correct answer" required>
+<option value="">Select correct answer</option>
+<option value="a">option a</option>
+<option value="b">option b</option>
+<option value="c">option c</option>
+<option value="d">option d</option> 
+</select>
+<br />
+
+<button style="background-color: #2868c7;font-size: 16px;color: black;" class="button pull-left">Save & Next Question</button>
+</form>
+
+<a href="quiz.html"><button style="background-color:green;font-size: 22px;color: black;" class="button pull-right">Submit Quiz</button></a>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

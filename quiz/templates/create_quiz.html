@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Create Quiz </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.timepicker.min.css')}}">
+    <style type="text/css">
+      .required:after {
+        content:" *";
+        color: red;
+        font-size: 1.0rem;
+      }
+      #card_create{
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+      }
+      @media (max-width: 600px) {
+        #card_create { 
+          width: 99%; 
+          margin-left: 0.5%;
+          margin-right: 0.5%;
+        }
+      }
+    </style>
+</head>
+
+<body onload="message()">
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color: #C30;">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="color: white;border-bottom-color: gray;">
+              <h4 class="modal-title">Message</h4>
+              <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body" style="color: white;">
+              <h4 id="modal_msg"></h4>
+            </div>
+            <!-- Modal footer -->
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div> -->
+          </div>
+        </div>
+    </div>
+    {% include "loader.html" ignore missing %}
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper" style="background: #d8e3e7;">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary2 text-white mr-2"><i class="mdi mdi-pencil"></i></span> Create Quiz 
+                        </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-data active" aria-current="page">
+                                    <span></span> </i>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 grid-margin">
+                            <div class="card" id="card_create">
+                              <div class="card-body">
+                                <h4 class="card-title">Quiz Details</h4>
+                                <p class="card-description"></p>
+                                <form class="forms-sample mt-5" id="quiz_det" action="/quiz/add_quiz_info/" method="post" onsubmit="return check_others_time();">
+                                  <div class="col-md-6">
+                                    <div class="form-group row">
+                                      <label class="col-sm-3 col-form-label required">Quiz Type</label>
+                                      <div class="col-sm-4">
+                                        <div class="form-check">
+                                          <label class="form-check-label">
+                                            <input type="radio" class="form-check-input" name="quiz_type" id="quiz_type_s" value="0" onclick="show_subject()">Subjective <i class="input-helper"></i></label>
+                                        </div>
+                                      </div>
+                                      <div class="col-sm-5">
+                                        <div class="form-check">
+                                          <label class="form-check-label">
+                                            <input type="radio" class="form-check-input" id="quiz_type_o" name="quiz_type" value="1" onclick="show_subject()" required> Other <i class="input-helper"></i></label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="required" for="exampleInputUsername1">Title</label>
+                                    <input type="text" class="form-control" name="quiz_title" id="quiz_title" placeholder="Quiz Title" required>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label class="required" for="exampleFormControlSelect3">Department</label>
+                                          <select class="form-control form-control-sm" name="dept" id="dept" required>
+                                            <option value="" disabled selected>Select</option>
+                                            <option value="CSE">CSE</option>
+                                            <option value="IT">IT</option>
+                                            <option value="ETRX">ETRX</option>
+                                            <option value="AI-DS">AI-DS</option>
+                                          </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label class="required" for="exampleFormControlSelect3">Semester</label>
+                                          <select class="form-control form-control-sm" name="sem" id="sem" required>
+                                            <option value="" disabled selected>Select</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                          </select>
+                                        </div>
+                                    </div>
+                                   </div>
+                                  <div class="row">
+                                    <div class="col-md-6" id="subject_div">
+                                      <div class="form-group">
+                                        <label class="required" for="exampleInputConfirmPassword1">Subject</label>
+                                        <select class="form-control form-control-sm" name="sub" id="sub" required>
+                                            <option value="" disabled selected>Select</option>                                            
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label class="required" for="exampleInputConfirmPassword1">Batch</label>
+                                        <select class="form-control form-control-sm" name="batch" id="batch" required>
+                                            <option value="" disabled selected>Select</option>
+                                            <option value="All">All</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                   </div>
+                                   <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label class="required" for="exampleInputConfirmPassword1">Date</label>
+                                        <input type="date" class="form-control" name="date" id="quiz_date" placeholder="Date for Quiz " required>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label class="required" for="exampleInputConfirmPassword1">Start Time</label>
+                                        <!-- <input type="time" class="form-control" onchange="settime()" name="s_time" id="starttime" placeholder="Time for Quiz" required> -->
+                                        <input type="text" class="form-control" name="s_time" id="starttime" placeholder="Start time for Quiz" required>
+                                      </div>
+                                    </div>
+                                   </div>
+                                   <div class="row">
+                                        <div class="col-md-6">
+                                          <div class="form-group">
+                                            <label class="required" for="exampleInputConfirmPassword1">End Time</label>
+                                            <input type="text" onchange="checktime()" class="form-control" name="e_time" id="endtime" placeholder="End Time for Quiz" required>
+                                          </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                          <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label required">View Score (Students)</label>
+                                            <div class="col-sm-4">
+                                              <div class="form-check">
+                                                <label class="form-check-label">
+                                                  <input type="radio" class="form-check-input" name="view_score" id="membershipRadios1" value="Yes" > Yes <i class="input-helper"></i></label>
+                                              </div>
+                                            </div>
+                                            <div class="col-sm-5">
+                                              <div class="form-check">
+                                                <label class="form-check-label">
+                                                  <input type="radio" class="form-check-input" name="view_score" value="No" checked> No <i class="input-helper"></i></label>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label class="required" for="exampleInputConfirmPassword1">Warning Limit</label>
+                                          <!-- <input type="time" class="form-control" onchange="settime()" name="s_time" id="starttime" placeholder="Time for Quiz" required> -->
+                                          <input type="number" class="form-control" name="switch_limit" id="switch_limit" placeholder="Enter the maximum number of warnings" value="5" max=100 required>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-md-6" style="display: none;">
+                                        <div class="form-group row">
+                                          <label class="col-sm-3 col-form-label required">Question Timer</label>
+                                          <div class="col-sm-4">
+                                            <div class="form-check">
+                                              <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" onclick="show_time_option()" name="ques_timer" id="q_t_y" value="Yes" disabled> Yes <i class="input-helper"></i></label>
+                                            </div>
+                                          </div>
+                                          <div class="col-sm-5">
+                                            <div class="form-check">
+                                              <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" onclick="show_time_option()" name="ques_timer" id="q_t_n" value="No" selected> No <i class="input-helper"></i></label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    <div class="col-md-6" id="qtd" style="display: none">
+                                      <div class="form-group">
+                                        <label class="required" for="exampleInputConfirmPassword1">Question Time Division</label>
+                                        <select class="form-control form-control-sm" name="q_time_divide" id="time_division">
+                                            <option value="" disabled selected>Select</option>
+                                            <option value="m">Manual</option>
+                                            <option value="eq">Equal Time</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                  </div>
+                                   <div class="row">
+                                    <div class="col-md-6">
+                                      <button type="submit" class="btn btn-gradient-primary mr-2" style="margin: 5%;">Next</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <button onclick="cancel_quiz()" class="btn btn-light" style="margin: 5%;">Cancel</button>
+                                    </div>
+                                   </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer" style="background: #d8e3e7;">
+                    <!-- <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+                    </div> -->
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.timepicker.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+          $('#starttime').timepicker({
+            timeFormat: 'HH:mm',
+            interval: 10,
+            minTime: '8',
+            maxTime: '11:30pm',
+            startTime: '08:00',
+            scrollbar: true
+          });
+          $('#endtime').timepicker({
+            timeFormat: 'HH:mm',
+            interval: 10,
+            minTime: '8',
+            maxTime: '11:30pm',
+            startTime: '08:00',
+            scrollbar: true
+          });
+          $('.ajax-loader').css("visibility", "hidden");
+        });
+        $("#starttime").keydown(false);
+        $("#endtime").keydown(false);
+        function addtime(time,min){
+          let times=time.split(":");
+          //clear here more than 24 hours
+          min=min%(24*60);
+          times[0]=(parseInt(times[0]))+parseInt(min/60) ;
+          times[1]=parseInt(times[1])+min%60;
+          //here control if hour and minutes reach max
+          if(times[1]>=60) { times[1]=0 ;times[0]++} ;
+          times[0]>=24 ?  times[0]-=24  :null;
+          
+          //here control if less than 10 then put 0 frond them
+          times[0]<10 ? times[0]= "0" + times[0] : null ;
+          times[1]<10 ? times[1]= "0" + times[1] : null ;
+          
+          return times.join(":");
+        }
+
+        function settime()
+        {
+            // alert(starttime);
+            // alert(mintime);
+            // alert(maxtime);
+          if($('#quiz_date').val()!='')
+          {
+            var varDate = new Date(($('#quiz_date').val()));
+            // alert(varDate);
+            var now = new Date();
+            // alert(now);
+            var start_time_set = $('#starttime').val()+":00";
+            var end_time_set = $('#endtime').val()+":00"; 
+            // alert(start_time_set);
+            // alert(end_time_set);
+            var today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
+            var time_now = now.toLocaleTimeString();
+            // alert(time_now);
+            // alert(varDate - now)
+            if( varDate - now <= 0)
+            {
+              if(start_time_set <= time_now){
+              alert("You can't select time which is past");
+              $('#starttime').focus();
+              return false;
+              }
+              else if(start_time_set >= end_time_set)
+              {
+                alert("End time should be greater than start time");
+                $('#endtime').focus();
+                return false;
+              }
+              else{
+                // alert("Date and time confirmed!");
+                $('#starttime').attr({ 'min': time_now});
+                return true;
+                // alert("date is today");
+              }
+            }
+            else if( varDate - now > 0)
+            {
+              if(start_time_set >= end_time_set)
+              {
+                alert("End time should be greater than start time");
+                $('#endtime').focus();
+                return false;
+              }
+              else{
+                // alert("Date and time confirmed!");
+                // $('#starttime').attr({ 'min': time_now});
+                // alert("date is today");
+                var starttime = $('#starttime').val();
+                var mintime = addtime(starttime,10);
+                var maxtime = addtime(starttime,300);
+                // alert(now.getHours() + ":" + now.getMinutes());
+                $('#endtime').attr({ 'value': minstime});
+                $('#endtime').attr({ 'value': mintime});
+                $('#endtime').attr({ 'min': mintime});
+                $('#endtime').attr({ 'max': maxtime});
+                var d = new Date("Tue Sep 01 2015 13:15:00 GMT-0400 (Eastern Daylight Time)");
+                $('#endtime').timepicker('setTime', d);
+                return true;
+              }
+            }  
+          }
+          else
+          {
+            alert("First Fill Date field!");
+            $('#quiz_date').focus();
+            return false;
+          }
+        }
+        function checktime()
+        {
+          if($('#starttime').val()=="")
+          {
+            alert("First Select Start Time!");
+            $('#endtime').attr({ 'value': '-:-'});
+            $('#starttime').focus();
+          }
+        }
+        function cancel_quiz()
+        {
+            var r = confirm("Are You Sure You Want to cancel Quiz?");
+            // alert(r);
+            if (r == true) {
+                $('#quiz_det').attr('autocomplete','off');
+                var base_url = window.location.origin;
+                redirect_url = base_url+'/quiz/cancel_quiz/';
+                // alert(redirect_url);
+                window.location.replace(redirect_url);
+                // alert(base_url);
+                document.getElementById("quiz_det").action = "/quiz/cancel_quiz/"; 
+            } else {
+                document.getElementById("quiz_det").action = "/quiz/add_quiz_info/"; 
+            }
+        }
+        function show_time_option()
+        {
+          
+          if($('#q_t_y').is(':checked')){
+            $('#qtd').show();
+            $('#time_division').attr('required', 'required');
+          } else {
+              $('#qtd').hide();
+              $('#time_division').removeAttr('required')
+
+          }
+        }
+
+        function show_subject()
+        {
+         // alert("show")
+         if($('#quiz_type_s').is(':checked')){
+            $('#subject_div').show();
+            $('#sub').attr('required', 'required');
+          } 
+          else {
+            $('#subject_div').hide();
+            $('#sub').removeAttr('required')
+          } 
+        }
+
+        function check_others_time()
+        {
+          var checked = false;
+          if($('#quiz_date').val()!='')
+          {
+            var varDate = new Date(($('#quiz_date').val()));
+            var now = new Date();
+            var start_time_set = $('#starttime').val()+":00";
+            var end_time_set = $('#endtime').val()+":00";
+            // alert(start_time_set);
+            // alert(end_time_set);
+            var today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
+            var time_now = (now.getHours()<10?'0':'') + now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes() + ":" + now.getSeconds();
+            if( varDate - now <= 0)
+            {
+              // alert("Same date");
+              if(start_time_set <= time_now){
+                alert("You can't select time which is past");
+                $('#starttime').focus();
+                checked =  false;
+              }
+              else if(start_time_set >= end_time_set){
+                alert("End time should be greater than start time");
+                $('#endtime').focus();
+                checked = false;
+              }
+              else{
+                // alert("Date and time confirmed!");
+                var starttime = $('#starttime').val();
+                var mintime = addtime(starttime,10);
+                var maxtime = addtime(starttime,300);
+                // alert(now.getHours() + ":" + now.getMinutes());
+                $('#endtime').attr({ 'value': mintime});
+                $('#endtime').attr({ 'value': mintime});
+                $('#endtime').attr({ 'min': mintime});
+                $('#endtime').attr({ 'max': maxtime});
+                checked = true;
+                // alert("date is today");
+              }
+            }
+            else if( varDate - now > 0)
+            {
+              if(start_time_set >= end_time_set)
+              {
+                alert("End time should be greater than start time");
+                $('#endtime').focus();
+                checked = false;
+              }
+              else{
+                // alert("Date and time confirmed!");
+                // $('#starttime').attr({ 'min': time_now});
+                // alert("date is today");
+                var starttime = $('#starttime').val();
+                var mintime = addtime(starttime,10);
+                var maxtime = addtime(starttime,300);
+                // alert(now.getHours() + ":" + now.getMinutes());
+                $('#endtime').attr({ 'value': mintime});
+                $('#endtime').attr({ 'value': mintime});
+                $('#endtime').attr({ 'min': mintime});
+                $('#endtime').attr({ 'max': maxtime});
+                checked = true;
+              }
+            }
+          }
+          else
+          {
+            alert("First Fill Date field!");
+            $('#quiz_date').focus();
+            checked = false;
+          }
+          // alert(checked);
+          if(!$('#quiz_det').attr('validated') && checked)
+          {
+            // alert("Checking Time!!");
+            var check_value = 0;
+            var d = $('#dept').val();
+            var s = $('#sem').val();
+            var b = $('#batch').val();
+            var dt = $('#quiz_date').val();
+            var st = $('#starttime').val();
+            var et = $('#endtime').val();
+
+            var dat = {dept: d, sem: s, batch:b, date: dt, s_time: st, e_time: et};  
+            $.ajax({
+              url: '/quiz/check_others_time/',
+              data: dat,
+              type: 'POST',
+              success: function(response){
+                console.log(response);
+                var check = JSON.parse(response);
+                if(check['msg']=="Yes" || check['msg']=="Started") {
+                  check_value = 0;
+                  if(check['msg']=="Yes")
+                    document.getElementById("modal_msg").innerHTML  = 'The Time slot is already booked by '+ check['fac_det'] + ' for '+ check['quiz_name'] +' , Kindly Choose Other Time slot!';
+                  else
+                    document.getElementById("modal_msg").innerHTML  = check['quiz_name'] + " has not been ended by " + check['fac_det'] + " please ask them to End!";
+                  $("#myModal").modal('show');
+                  setTimeout(function(){
+                    $("#myModal").modal('hide');
+                  }, 5000);
+                }
+                else if(check['msg'] == "No")
+                {
+                  check_value = 1;
+                  $('#quiz_det').attr('validated',true);
+                  $('#quiz_det').submit();
+                  return true; 
+                }
+                // console.log(data)
+                // var subjects = JSON.parse(response.sub);
+                // console.log(data)
+                
+              },
+              error: function(error){
+                console.log(error);
+              }
+            });
+            return false;
+          }
+          else if(checked==false)
+          {
+            return false;
+          }
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/subject.js')}}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script> -->
+    <!-- inject:js -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+    <!-- End custom js for this page -->
+</body>
+
+</html>

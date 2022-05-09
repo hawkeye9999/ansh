@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Preview Questions </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">    
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style type="text/css">
+      .form-control{
+        font-size: 1.000rem;
+      }
+      .form-group label{
+       font-size: 1.0125rem; 
+      }
+      .btn2 {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 2%;
+      }
+      .option_dv{
+        display: none;
+      }
+      .wrapper {
+        margin: auto;
+        max-width: 640px;
+        padding-top: 0px;
+        text-align: center;
+      }
+
+      .container {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        /*border: 0.5px solid rgba(130, 130, 130, 0.25);*/
+        /*box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 
+                    0 0 0 1px rgba(0, 0, 0, 0.1);*/
+      }
+
+      .upload-container {
+        background-color: rgb(239, 239, 239);
+        border-radius: 6px;
+        padding: 10px;
+      }
+
+      .border-container {
+        border: 5px dashed rgba(198, 198, 198, 0.65);
+        border-radius: 6px;
+        padding: 20px;
+      }
+
+      .border-container p {
+        color: #130f40;
+        font-weight: 600;
+        font-size: 1.1em;
+        letter-spacing: -1px;
+        margin-top: 30px;
+        margin-bottom: 0;
+        opacity: 0.65;
+      }
+
+      #file-browser {
+        text-decoration: none;
+        color: rgb(22,42,255);
+        border-bottom: 3px dotted rgba(22, 22, 255, 0.85);
+      }
+
+      #file-browser:hover {
+        color: rgb(0, 0, 255);
+        border-bottom: 3px dotted rgba(0, 0, 255, 0.85);
+      }
+    </style>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script>
+        function message() {
+          // alert("Body loaded!");
+          var msg = "{{message}}";
+        //   alert("{{msg}}");
+          if(msg!="")
+          {
+            $("#myModal").modal();
+            var myModal = $("#myModal");
+            $("#modbod").text(msg);
+            clearTimeout(myModal.data('hideInterval'));
+            myModal.data('hideInterval', setTimeout(function(){
+                myModal.modal('hide');
+            }, 3000));
+          }
+        }
+    </script>
+</head>
+
+<body onload="message()">
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color: #C30;">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="color: white;border-bottom-color: gray;">
+              <h4 class="modal-title">Validation Message</h4>
+              <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body" style="color: white;">
+              <h4 id="modbod"></h4>
+            </div>
+            <!-- Modal footer -->
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div> -->
+          </div>
+        </div>
+    </div>
+    {% include "loader.html" ignore missing %}
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+      {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+        {% include "side_nav.html" ignore missing %}
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper" style="background: #d8e3e7;">
+            <div class="page-header">
+              <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary2 text-white mr-2"><i class="mdi mdi-pencil"></i></span>Preview Quiz Questions
+              </h3>
+              <nav aria-label="breadcrumb">
+                <ul class="breadcrumb">
+                  <li class="breadcrumb-data active" aria-current="page">
+                    <span></span> </i>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+            <div class="row">
+              <div class="col-md-12 grid-margin">
+              {% if msg!="" %}
+                <div class="card" style="width: 100%;margin-left: 0%;margin-right: 10%;">
+                  <div class="card-body">
+                    <h4 class="card-title">Preview Questions</h4>
+                    <p class="card-description">{{msg}}</p>
+                  </div>
+                </div>
+              <!-- </div>
+              </div> -->
+              {% else %}
+                {% for question in ques %}
+                {% set ques_no = loop.index %}
+                  <div class="card" style="width: 100%;margin-left: 0%;margin-right: 10%;margin-bottom: 5%;">
+                    <div class="card-body">
+                      <!-- <h4 class="card-title">Q. {{question.q_no}}</h4> -->
+                      <div class="card-title">
+                        <div class="row">
+                          <div class="col-md-6">Q. {{ ques_no }}</div>
+                          <div class="col-md-6" style="text-align: right;">
+                            <div>Points</div>
+                            <div class="">{{ question.points }}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="card-description"></p>
+                      <form class="forms-sample mt-3" id="quiz_det{{ ques_no }}" action="/add_question/" method="post">
+                          <div class="row">
+                            <div style="width: 83%;">
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="exampleInputUsername1">Question</label>
+                                  <textarea class="form-control" name="ques{{ ques_no }}" id="quiz_title" rows="5" disabled>{{question.question}}</textarea>
+                                </div>
+                              </div>
+                            </div>
+                            <div style="width: 17%;text-align: center;">
+                              <div class="col-md-12">
+                                <button type="button" class="btn2" style="font-size: 12px;color: black;background-color: lightgray;" onclick="hide_show('{{ques_no}}')" title="show" id="hs{{option}}"><i id="icon{{ques_no}}" class="fa fa-arrow-down"></i></button>
+                                <input type="hidden" name="ques_ind{{ques_no}}" id="ques_ind{{ques_no}}" value="{{question.q_id}}">
+                                <input type="hidden" name="question_no{{ques_no}}" id="ques_no{{ques_no}}" value="{{question.q_id}}">
+                              </div>
+                            </div>
+                          </div>
+                          {% if question.ans_type==0 %}
+                          <div class="option_dv" id="option_div{{ques_no}}" style="display: none;">
+                           {% if question.opt1!="-" %}
+                             <div class="row">
+                              <div class="col-md-10">
+                                <div class="form-group">
+                                  <label for="exampleInputConfirmPassword1">Option 1</label>
+                                  <input type="text" class="form-control" name="opt1"value="{{question.opt1}}" style="width: 100%;" disabled>
+                                </div>
+                              </div>
+                              </div>
+                            {% else %}
+                              <p>No Option 1</p>
+                            {% endif %}
+                            {% if question.opt2!="-" %}
+                           <div class="row">
+                            <div class="col-md-10">
+                              <div class="form-group">
+                                <label for="exampleInputConfirmPassword1">Option 2</label>
+                                <input type="text" class="form-control" name="opt1" value="{{question.opt2}}" style="width: 100%;" disabled>
+                              </div>
+                            </div>
+                            </div>
+                            {% else %}
+                              <p>No Option 2</p>
+                            {% endif %}
+                            {% if question.opt3!="-" %}
+                           <div class="row">
+                            <div class="col-md-10">
+                              <div class="form-group">
+                                <label for="exampleInputConfirmPassword1">Option 3</label>
+                                <input type="text" class="form-control" name="opt3" value="{{question.opt3}}" style="width: 100%;" disabled>
+                              </div>
+                            </div>
+                           </div>
+                            {% else %}
+                              <p>No Option 3</p>
+                            {% endif %}
+                            {% if question.opt4!="-" %}
+                            <div class="row">
+                              <div class="col-md-10">
+                                <div class="form-group">
+                                  <label for="exampleInputConfirmPassword1">Option 4</label>
+                                  <input type="text" class="form-control" name="opt4" value="{{question.opt4}}" style="width: 100%;" disabled>
+                                </div>
+                              </div>
+                            </div>
+                            {% else %}
+                              <p>No Option 4</p>
+                            {% endif %}
+                            <div class="row">
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label for="exampleFormControlSelect3">Correct Option</label>
+                                  <select class="form-control form-control-sm" name="correct_opt" id="correct_opt" style="color:black;" disabled>
+                                    {% if question.correct_opt=="option1" %}
+                                    <option value="option1" selected>Option 1</option>
+                                    {% elif question.correct_opt=="option2" %}
+                                    <option value="option2" selected>Option 2</option>
+                                    {% elif question.correct_opt=="option3" %}
+                                    <option value="option3" selected>Option 3</option>
+                                    {% elif question.correct_opt=="option4" %}
+                                    <option value="option4" selected>Option 4</option>
+                                    {% endif %}
+                                    
+                                  </select>
+                                </div>
+                              </div>
+                              {% if session['ques_timer']==1 %}
+                              {% set time = question.q_time.split(':') %}
+                              <div class="col-md-8">
+                                <div class="row" style="text-align: center;">
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label for="exampleFormControlSelect3">Hours</label>
+                                      <input type="number" id="mcq_hrs" class="mcq form-control" value="{{time[0]}}" name="hrs" style="width: 100%;" disabled>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-1" style="padding: 2.0rem;">
+                                    :
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label for="exampleFormControlSelect3">Minutes</label>
+                                      <input type="number" id="mcq_mins" class="mcq form-control" value="{{time[1]}}" name="mins" style="width: 100%;" disabled>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-1" style="padding: 2.0rem;">
+                                    :
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label for="exampleFormControlSelect3">Seconds</label>
+                                      <input type="number" id="mcq_secs" class="mcq form-control" name="secs" value="{{time[2]}}" style="width: 100%;" disabled>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            {% endif %}
+                            </div>
+                          </div>
+                        {% elif question.ans_type==1 %}
+                          <div class="option_dv" id="option_div{{ques_no}}" style="display: none;">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label for="exampleInputUsername1">Answer</label>
+                                  <textarea class="one form-control" name="ans{{ ques }}" id="answer" placeholder="Written by Student....." rows="2" disabled></textarea>
+                                </div>
+                              </div>
+                              {% if session['ques_timer']==1 %}
+                              {% set time = question.q_time.split(':') %}
+                              <div class="col-md-8">
+                                <div class="row" style="text-align: center;">
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label for="exampleFormControlSelect3">Hours</label>
+                                      <input type="number" id="mcq_hrs" class="mcq form-control" value="{{time[0]}}" name="hrs" style="width: 100%;" disabled>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-1" style="padding: 2.0rem;">
+                                    :
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label for="exampleFormControlSelect3">Minutes</label>
+                                      <input type="number" id="mcq_mins" class="mcq form-control" value="{{time[1]}}" name="mins" style="width: 100%;" disabled>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-1" style="padding: 2.0rem;">
+                                    :
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label for="exampleFormControlSelect3">Seconds</label>
+                                      <input type="number" id="mcq_secs" class="mcq form-control" name="secs" value="{{time[2]}}" style="width: 100%;" disabled>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            {% endif %}
+                            </div>
+                          </div>
+                        {% elif question.ans_type==2 %}
+                          <div class="option_dv" id="option_div{{ques_no}}" style="display: none;">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div class="wrapper">
+                                  <div class="container">
+                                    <h4 style="font-size:1.7vw;">Pdf Will be Uploaded By Student</h4>
+                                    <div class="upload-container">
+                                      <div class="border-container">
+                                        <!--<input type="file" id="file-upload">-->
+                                        <img src="{{ url_for('static', filename='images/pdf_upload.png')}}" style="max-width:100%;height:auto;">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              {% if session['ques_timer']==1 %}
+                              {% set time = question.q_time.split(':') %}
+                              <div class="col-md-8">
+                                <div class="row" style="text-align: center;">
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label for="exampleFormControlSelect3">Hours</label>
+                                      <input type="number" id="mcq_hrs" class="mcq form-control" value="{{time[0]}}" name="hrs" style="width: 100%;" disabled>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-1" style="padding: 2.0rem;">
+                                    :
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label for="exampleFormControlSelect3">Minutes</label>
+                                      <input type="number" id="mcq_mins" class="mcq form-control" value="{{time[1]}}" name="mins" style="width: 100%;" disabled>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-1" style="padding: 2.0rem;">
+                                    :
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label for="exampleFormControlSelect3">Seconds</label>
+                                      <input type="number" id="mcq_secs" class="mcq form-control" name="secs" value="{{time[2]}}" style="width: 100%;" disabled>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            {% endif %}
+                            </div>
+                          </div>
+                        {% endif %}
+                        <div class="row" style="text-align: center;">
+                          <div class="col-md-4">
+                            <button type="button" onclick="edit_ques('{{ques_no}}')" class="btn btn-success mr-2" title="Edit" style="margin: 2%;"><i class="mdi mdi-lead-pencil"></i></button>
+                          </div>
+                          <div class="col-md-4">
+                            <button type="button" onclick="delete_ques('{{ques_no}}')" class="btn btn-gradient-primary  mr-2" title="Delete" style="margin: 2%;"><i class="mdi mdi-delete"></i></button>
+                          </div>
+                          <div class="col-md-4">
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    {% set ques_no = ques_no + 1 %}
+                  </div>
+                  {% endfor %}
+                {% endif %}
+                  <h6>Note:</h6>
+                  <div class="row" style="text-align: center;">
+                    <p style="font-size: 1.175rem;"><small>*To Change the time per Question choose Manual Mode in Quiz Details & Allot time for every question , Equal Mode divides the duration of Quiz into equal time for every question</small></p>
+                  </div>
+                  <div class="row" style="text-align: center;">
+                    <p style="font-size: 1.175rem;"><small>*For Saving and Locking the Quiz please Save the Quiz</small></p>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:partials/_footer.html -->
+          <footer class="footer" style="background: #d8e3e7;">
+            <div class="row" style="text-align: center;">
+              <div class="col-md-3">
+                <button type="button" onclick="add_ques()" class="btn btn-info mr-2" style="margin: 5%;">Add Question  <i class="mdi mdi-plus float-right"></i>
+                </button>
+              </div>
+              <div class="col-md-3">
+                <button type="button" onclick="Quiz_details()" class="btn btn-light mr-2" style="margin: 5%;">Quiz Details  <i class="mdi mdi-view-list float-right"></i></button>
+              </div>
+              <div class="col-md-3">
+                <button type="submit" onclick="cancel_quiz()" class="btn btn-gradient-primary mr-2" style="margin: 5%;">Delete Quiz  <i class="mdi mdi-delete float-right"></i></button>
+              </div>
+              <div class="col-md-3">
+                <button type="button" onclick="complete_quiz()" class="btn btn-success  mr-2" style="margin: 5%;">Save Quiz  <i class="mdi mdi-content-save float-right"></i></button>
+              </div>
+            </div>
+          </footer>
+            <!-- partial -->
+        </div>
+          <!-- main-panel ends -->
+      </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/subject.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    
+    <!-- <script src="{{ url_for('static', filename='js/bootstrap.js')}}"></script> -->
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('.ajax-loader').css("visibility", "hidden");
+      });
+      var unsaved = true;
+      window.onbeforeunload = function() {
+        if (unsaved) {
+          return "Did you save your stuff?"
+        }
+      }
+      function saved() {
+        unsaved=false;
+      }
+      function saved_un() {
+        unsaved=true;
+      }
+      function edit_ques(ques) {
+        // document.getElementById("quiz_det").action = '/edit_quiz_quest?q='+ques; 
+        var base_url = window.location.origin;
+        saved();
+        // alert(base_url);
+        redirect_url = base_url+'/quiz/edit_quiz_quest?q='+ques;
+        // alert(redirect_url);
+        // window.location.replace(redirect_url);
+        document.getElementById("quiz_det"+ques).action = '/quiz/edit_quiz_quest?q='+ques; 
+        $("#quiz_det"+ques).submit();
+      }
+
+      function cancel_quiz()
+      {
+          var r = confirm("Are You Sure You Want to delete Quiz?");
+          if (r == true) {
+              var base_url = window.location.origin;
+              saved();
+              // alert(base_url);
+              redirect_url = base_url+'/quiz/cancel_quiz_quest/';
+              // alert(redirect_url);
+              window.location.replace(redirect_url);
+              // alert(base_url);
+              document.getElementById("quiz_det").action = "/quiz/cancel_quiz_quest/"; 
+          } else {
+            saved();  
+            document.getElementById("quiz_det").action = "/quiz/add_quiz_info/"; 
+          }
+      }
+      function add_ques()
+      {
+        
+        var base_url = window.location.origin;
+        saved();
+        // alert(base_url);
+        redirect_url = base_url+'/quiz/add_quiz_det/';
+        // alert(redirect_url);
+        window.location.replace(redirect_url);
+        // alert(base_url);
+        document.getElementById("quiz_det").action = "/quiz/add_quiz_det/"; 
+      }
+      function complete_quiz()
+      {
+        var r = confirm("Are You Sure You Want to submit Quiz?");
+        if (r == true) {
+            saved();
+            var base_url = window.location.origin;
+            // alert(base_url);
+            redirect_url = base_url+'/quiz/complete_quiz/';
+            window.location.replace(redirect_url);
+            // alert(base_url);
+            document.getElementById("quiz_det").action = "/quiz/complete_quiz/"; 
+        } else {
+        } 
+      }
+      function hide_show(d_num)
+      {
+        // alert(d_num);
+        var mydiv = document.getElementById('option_div'+d_num);
+        if (mydiv.style.display === 'block' || mydiv.style.display === '')
+        {
+          mydiv.style.display = 'none';
+          document.getElementById('icon'+d_num).className = "fa fa-arrow-down";
+          document.getElementById('icon'+d_num).title = "show";
+        }
+          
+        else{
+          mydiv.style.display = 'block';
+          document.getElementById('icon'+d_num).className = "fa fa-arrow-up";
+          document.getElementById('icon'+d_num).title = "hide";
+        }
+      }
+      function Quiz_details()
+      {
+        
+        var base_url = window.location.origin;
+        saved();
+        // alert(base_url);
+        redirect_url = base_url+'/quiz/preview_quiz/';
+        // alert(redirect_url);
+        window.location.replace(redirect_url);
+        // alert(base_url);
+        document.getElementById("quiz_det").action = "/quiz/preview_quiz/"; 
+      }
+      function delete_ques(ques)
+      {
+        var r = confirm("Are You Sure You Want to Delete Question No."+ques+" ?");
+        if (r == true) {
+          var i = $('#ques_ind'+ques).val();
+          var q = $('#ques_no'+ques).val();
+          var dat = {index: i,ques_no: q};  
+          saved();
+          $.ajax({
+            url: '/quiz/del_question/',
+            data: dat,
+            type: 'POST',
+            success: function(response){
+              // if(data.success == true){ // if true (1)
+              //   setTimeout(function(){// wait for 5 secs(2)
+              //        location.reload(); // then reload the page.(3)
+              //   }, 5000); 
+              // }
+              location.reload();
+              saved_un();
+            },
+            error: function(error){
+              console.log(error);
+              saved_un();
+            }
+          });
+        }
+      }
+    </script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <!-- <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script> -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+
+    <!-- End custom js for this page -->
+</body>
+
+</html>

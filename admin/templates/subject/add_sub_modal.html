@@ -1,0 +1,106 @@
+<div class="modal fade" id="Add_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog add_sub" role="document">
+    <div class="modal-content add_sub-content">
+      <div class="modal-header border-bottom-0" style="background: linear-gradient(to right, #cb2d3e, #a12023);color: white;">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="mdi mdi-library-plus" aria-hidden="true" style="padding: 5px;font-style: bold;font-weight: 900;"></i>Add subject</h5>
+        <button type="button" class="close" data-dismiss="modal" style="color: white;" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form name="Add_Subject_form" id="Add_Subject_form" action="/admin/add_subject/" onsubmit="return beforesubmit('add')" method="post" enctype="multipart/form-data">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label required">Name</label>
+                <div class="col-sm-9">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text inputgroup_text"><i class="mdi mdi-rename-box" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                    </div>
+                    <input type="text" class="form-control" name="sub_full_name" placeholder="Enter Subject Full Name">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label required">Short Form</label>
+                <div class="col-sm-9">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text inputgroup_text"><i class="mdi mdi-rename-box" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                    </div>
+                    <input type="text" class="form-control" name="sub_short_name" placeholder="Enter Subject Name short Form:eg AI,DSA"> 
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label required">Subject Code</label>
+                <div class="col-sm-9">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text inputgroup_text"><i class="mdi mdi-numeric-1-box-outline" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                    </div>
+                    <input type="text" class="form-control" name="sub_code" placeholder="Enter Subject Code"> 
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label required">Type</label>
+                <div class="col-sm-9">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text inputgroup_text"><i class="mdi mdi-comment-account-outline" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                    </div>
+                    <select class="form-control" name="sub_type">
+                      <option value="" selected disabled>Select</option>
+                      <option value="1">Theory</option>
+                      <option value="0">Practical</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label required">Carries Marks</label>
+                <div class="col-sm-9">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text inputgroup_text"><i class="mdi mdi-numeric" aria-hidden="true" style="font-style: bold;font-weight: 1000;color: white;"></i></span>
+                    </div>
+                    <select class="form-control" name="marks">
+                      <option value="" selected disabled>Select</option>
+                      <option value="1">Yes</option>
+                      <option value="0">No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="mode" value="{{sub_type}}">
+          </div>
+        </div>
+        <div class="modal-footer border-top-0 d-flex justify-content-center">
+          <div class="row" style="display: contents;text-align: center;">
+            <div class="col-md-6">
+              <input type="reset" class="btn btn-success" style="background-color: #0a4f9d;margin: 1%;">
+            </div>
+            <div class="col-md-6">
+              <button type="submit" class="btn btn-success" style="background: linear-gradient(to right, #46c35f, #2aa260);margin: 1%;">Submit</button>    
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

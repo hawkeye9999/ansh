@@ -1,0 +1,110 @@
+.container {
+    padding: 50px 10%;
+  }
+   
+  .box {
+    position: relative;
+    background: #ffffff;
+    width: 100%;
+  }
+   
+  .box-header {
+    color: #444;
+    display: block;
+    padding: 10px;
+    position: relative;
+    border-bottom: 1px solid #f4f4f4;
+    margin-bottom: 10px;
+  }
+   
+  .box-tools {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+  }
+   
+  .dropzone-wrapper {
+    border: 2px dashed #91b0b3;
+    color: #92b0b3;
+    position: relative;
+    height: 150px;
+  }
+   
+  .dropzone-desc {
+    position: absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    width: 40%;
+    top: 50px;
+    font-size: 16px;
+  }
+   
+  .dropzone,
+  .dropzone:focus {
+    position: absolute;
+    outline: none !important;
+    width: 100%;
+    height: 150px;
+    cursor: pointer;
+    opacity: 0;
+  }
+   
+  .dropzone-wrapper:hover,
+  .dropzone-wrapper.dragover {
+    background: #ecf0f5;
+  }
+   
+  .preview-zone {
+    text-align: center;
+  }
+   
+  .preview-zone .box {
+    box-shadow: none;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+   
+  .btn-primary {
+    background-color: #cb2d3e;
+    border: 1px solid #a12023;
+  }
+
+.card {
+    border-radius: 5px;
+    -webkit-box-shadow: 0 0 5px 0 rgba(43, 43, 43, .1), 0 11px 6px -7px rgba(43, 43, 43, .1);
+    box-shadow: 0 0 5px 0 rgba(43, 43, 43, .1), 0 11px 6px -7px rgba(43, 43, 43, .1);
+    border: none;
+    margin-bottom: 30px;
+    -webkit-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+}
+
+.card .card-header {
+    background-color: transparent;
+    border-bottom: none;
+    padding: 0.5rem;
+    position: relative
+}
+#card_header_h5 {
+    font-size: 0.9rem;
+}
+
+.card .card-header h5:after {
+    content: "";
+    background-color: #d2d2d2;
+    width: 101px;
+    height: 1px;
+    position: absolute;
+    bottom: 6px;
+    left: 0.5rem;
+}
+
+.card .card-block {
+    padding: 0.5rem;
+}
+
+#instructions {
+    font-size: 0.8rem;
+}

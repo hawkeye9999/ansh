@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Quicky </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style type="text/css">
+      .form-control{
+        font-size: 1.000rem;
+      }
+      .form-group label{
+       font-size: 1.0125rem; 
+      }
+      .btn2 {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 2%;
+      }
+      .check {
+        -webkit-touch-callout: none; /*iOS Safari*/
+        -webkit-user-select: none; /*Chrome/Safari/Opera*/
+        -khtml-user-select: none; /*Konqueror*/
+        -moz-user-select: none; /*Firefox*/
+        -ms-user-select: none; /*Internet Explorer/Edge*/
+        user-select: none;/* Non-prefixed version, currently
+        not supported by any browser*/
+      }
+      #progressBar {
+        width: 100%;
+        margin: 0.625rem auto;
+        height: 1.975rem;
+        background-color: #19547b;
+        color: black;
+        font-size: 1.125rem;
+        font-weight: 400;
+      }
+
+      #progressBar div {
+        height: 100%;
+        text-align: right;
+        padding: 0.125rem 0.625rem;
+        line-height: 1.975rem; /* same as #progressBar height if we want text middle aligned */
+        width: 0;
+        background-color: #fdbf43;
+        box-sizing: border-box;
+      }
+      #left {
+        float: left;
+      }
+      #right {
+        float:right;
+      }
+      input[type=radio]:checked ~ .check {
+        border: 5px solid #0DFF92;
+      }
+      input[type=radio]:checked ~ .check::before{
+        background: #0DFF92;
+      }
+    </style>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script>
+        // function checkTime(i) {
+        //   if (i < 10) {
+        //     i = "0" + i;
+        //   }
+        //   return i;
+        // }
+
+        // function hmsToSecondsOnly(str) {
+        //   var p = str.split(':'),
+        //       s = 0, m = 1;
+
+        //   while (p.length > 0) {
+        //       s += m * parseInt(p.pop(), 10);
+        //       m *= 60;
+        //   }
+        //   return s;
+        // }
+
+        function message() {
+          // alert("Body loaded!");
+          var msg = "{{message}}";
+          // alert("{{data}}");
+          if(msg!="")
+          {
+            $("#myModal").modal();
+            var myModal = $("#myModal");
+            $("#modbod").text(msg);
+            clearTimeout(myModal.data('hideInterval'));
+            myModal.data('hideInterval', setTimeout(function(){
+                myModal.modal('hide');
+            }, 3000));
+          }
+          {% if session['q_timer'] == 1 %}
+            var time = '{{time_per_ques}}';
+            var time_p = parseInt(time)
+            console.log(time_p)
+            var today = new Date();
+            // console.log("today:"+today)
+            // var h = today.getHours();
+            // var m = today.getMinutes();
+            // var s = today.getSeconds();
+            // // add a zero in front of numbers<10
+            // m = checkTime(m);
+            // s = checkTime(s);
+            // var now = h + ":" + m + ":" + s;
+            Number.prototype.padLeft = function(base,chr){
+              var  len = (String(base || 10).length - String(this).length)+1;
+              return len > 0? new Array(len).join(chr || '0')+this : this;
+            }
+            var d = new Date;
+            now = [(d.getFullYear()),(d.getMonth()+1).padLeft(),d.getDate().padLeft()].join('-') +' ' +[d.getHours().padLeft(),d.getMinutes().padLeft(),d.getSeconds().padLeft()].join(':');
+
+            var now = new Date(now)
+            // console.log("now:"+now);
+            var finish = new Date("{{session['question_timer_finish']}}")
+            // console.log("finish:"+finish);
+            
+            // var now_sec = hmsToSecondsOnly(now)
+            // console.log("now_sec:"+now_sec);
+            // var finish_sec = hmsToSecondsOnly(finish)
+            // console.log("finish_sec:"+finish_sec);
+            // var secs_remaining = finish_sec - now_sec
+            var secs_remaining = Math.abs(finish - now) / 1000;
+            // console.log("secs_remaining:"+secs_remaining);
+             // split it at the colons
+            // minutes are worth 60 seconds. Hours are worth 60 minutes.
+            
+            // console.log(secs_remaining);
+            progress(time_p, time_p, $('#progressBar'));
+          {% endif %}
+        }
+
+        $(window).focus(function () {
+      //do something
+               console.log("You are in  this tab");
+        });
+
+        $(window).blur(function () {
+              //do something
+          console.log("Not in this tab");
+          var dat = {get_focus: 0};  
+          // $.ajax({
+          //   url: '/student/browser_switch/',
+          //   data: dat,
+          //   type: 'POST',
+          //   success: function(response){
+          //     console.log(response);
+          //     $("#myModal").modal('show');
+          //     var myModal = $("#myModal");
+          //     $("#modbod").text("Warning: You Can't Switch your Tab more than "+(3-parseInt(response)));
+          //     clearTimeout(myModal.data('hideInterval'));
+          //     myModal.data('hideInterval', setTimeout(function(){
+          //         myModal.modal('hide');
+          //     }, 3000));
+          //     if(response ==3)
+          //     {
+          //       $("#myModal").modal('show');
+          //       var myModal = $("#myModal");
+          //       $("#modbod").text("Quiz is Over for you!");
+          //       clearTimeout(myModal.data('hideInterval'));
+          //       myModal.data('hideInterval', setTimeout(function(){
+          //           myModal.modal('hide');
+          //       }, 3000));
+          //       var base_url = window.location.origin;
+          //       redirect_url = base_url+'/student/quiz_finish/';
+          //       alert(redirect_url);
+          //       window.location.replace(redirect_url);  
+          //     }
+              
+          //   },
+          //   error: function(error){
+          //     console.log(error);
+          //   }
+          // });       
+        })
+
+
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        var date = "{{session['quiz_date']}}";
+        setTimeout(function(){xhr.abort();}, 2000);
+        // alert("{{session['quiz_end']}}");
+        var dt_str = new Date(date).toLocaleDateString("en-US", options);
+        dt_str = dt_str+' '+"{{session['quiz_end']}}"
+        // alert(date);
+        // alert(dt_str);
+        var countDownDate = new Date(dt_str).getTime();
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+
+          // Get today's date and time
+          var now = new Date().getTime();
+
+          // Find the distance between now and the count down date
+          var distance = countDownDate - now;
+
+          // Time calculations for days, hours, minutes and seconds
+          var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          // Display the result in the element with id="demo"
+          document.getElementById("demo").innerHTML = hours + "h "
+          + minutes + "m " + seconds + "s ";
+
+          // If the count down is finished, write some text
+          if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("demo").innerHTML = "EXPIRED";
+            var base_url = window.location.origin;
+            redirect_url = base_url+'/student/quiz_finish/';
+            alert(redirect_url);
+            window.location.replace(redirect_url); 
+          }
+        }, 1000);
+
+
+        function next_ques(){
+          if($("#one_line").length == 0) {
+              $('#answer').prop('required',false);
+            }
+            else if($("#options").length == 0)
+            {
+              $('[name="option_select"]').prop('required',false);
+            }
+          transfer_data('next')
+        }
+
+        function previous_ques(){
+          if($("#one_line").length == 0) {
+            $('#answer').prop('required',false);
+          }
+          else if($("#options").length == 0)
+          {
+            $('[name="option_select"]').prop('required',false);
+          }
+          transfer_data('prev')
+        }
+
+        $("#quiz_det").submit((e) =>{
+          e.preventDefault()
+          transfer_data('submit')
+        /***********SUBMITTING FORM END************************/
+        return false
+      })
+
+
+
+
+
+          {% if questions.opt1!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+          {% if questions.opt2!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+          {% if questions.opt3!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+          {% if questions.opt4!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+    </script>    
+</head>
+
+<body onload="message()" oncopy="return false" onpaste="return false" onreturn="return false">
+  <div class="modal fade" id="myModal">
+      <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #C30;">
+        
+          <!-- Modal Header -->
+          <div class="modal-header" style="color: white;border-bottom-color: gray;">
+            <h4 class="modal-title">Validation Message</h4>
+            <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+          </div>
+          
+          <!-- Modal body -->
+          <div class="modal-body" style="color: white;">
+            <h4 id="modbod"></h4>
+          </div>
+          <!-- Modal footer -->
+          <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div> -->
+        </div>
+      </div>
+  </div>
+  <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+      {% include "nav.html" ignore missing %}
+      
+      <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        {% include "side_nav.html" ignore missing %}
+        <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper" style="background: #d8e3e7;">
+          <div class="page-header">
+<!--                   <div class="row"> -->
+              <div style="width: 20%;padding-left: 2%;padding-top: 2%;">
+                <h3 class="page-title">
+                    <span class="page-title-icon bg-gradient-primary2 text-white mr-2"><i class="mdi mdi-pencil"></i></span>Quiz 
+                </h3>
+              </div>
+              <div style="width: 80%; margin-left:auto; margin-right:0;">
+                <div class="row">
+                  <div class="col-md-12 grid-margin">
+                    <div class="card content pull-right" style="position: relative;border: 1px solid black;border-radius: 7%;float: right;text-align: center;">
+                      <div class="card-body" style="padding: 0.500rem;">
+                        <h4 class="card-title">Time Remaining:</h4>
+                        <p id="demo" style="font-size: 1.325rem;font-style: bold;"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <div style="width: 20%;"> -->
+                <nav aria-label="breadcrumb">
+                  <ul class="breadcrumb">
+                    <li class="breadcrumb-data active" aria-current="page">
+                      <span></span> </i>
+                    </li>
+                  </ul>
+                </nav>
+              <!-- </div> -->
+            <!-- </div>   -->
+          </div>
+              <div class="row" style="margin-top: 1%;">
+                <div class="col-md-12">
+                  {% if ques_no>1 %}
+                  <button class="btn btn-gradient-primary btn-icon" style="padding: 1%;font-size: 1.1rem;" id="left" onclick="previous_ques()">&lt;</button>
+                  {% endif %}
+                  {% if ques_no < session['total_ques'] %}
+                  <button class="btn btn-gradient-primary btn-icon" style="padding: 1%;font-size: 1.1rem;" id="right" onclick="next_ques()">&gt;</button>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="row" style="margin-top: 2%;">
+                  <div class="col-md-12 grid-margin">
+                      <div class="card" style="width: 100%;margin-left: 0%;margin-right: 0%;">
+                        <div class="card-body">
+                          <form class="forms-sample mt-5 check" enctype="multipart/form-data" id="quiz_det" action="/student/submit_question/" method="post">
+                            <h4>Q {{ ques_no }}.</h4>
+                            <div class="form-group">
+                              <label for="exampleInputUsername1">Question</label>
+                              <textarea class="form-control check" style="font-size: 1.125rem;" rows="5" disabled="">{{questions.question}}</textarea>
+                              <input type="hidden" name="question_id" value="{{questions.q_id}}">
+                              <input type="hidden" name="ans_type" value="{{questions.ans_type}}">
+                            </div>
+                            {% if questions.ans_type==0 %}
+                            <div id="options" id="opt{{ques_no}}">
+                              {% for j in range(1,total+1) %}
+                              <div class="row">
+                              <div class="col-md-12">
+                                <div class="form-check">
+                                  <label class="form-check-label" style="font-size: 1.025rem;">
+                                    {% if attempted==1 or questions.submitted==1 %}
+                                      {% if questions.session_answer and questions.session_answer !=''  %}
+                                        {% set opt_select = questions.session_answer[-1] | int %}  
+                                        {% if opt_select == j %}
+                                        <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" checked>
+                                        {% else %}
+                                        <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" required="required">
+                                        {% endif %}
+                                      {% elif questions.submitted_answer %}
+                                        {% set opt_select = questions.submitted_answer[-1] | int %}  
+                                        {% if opt_select == j %}
+                                        <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" checked>
+                                        {% else %}
+                                        <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" required="required">
+                                        {% endif %}
+                                      {% else %}
+                                        <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" 
+                                      required="required">
+                                      {% endif %}
+                                    {% else %}
+                                      <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" 
+                                      required="required">
+                                    {% endif %}
+                                    {% if j == 1 %}
+                                      {{questions.opt1}}
+                                    {% elif j == 2 %}
+                                      {{questions.opt2}}
+                                    {% elif j == 3 %}
+                                      {{questions.opt3}}
+                                    {% elif j == 4 %}
+                                      {{questions.opt4}}
+                                    {% endif %}  
+                                    <i class="input-helper"></i>
+                                    
+                                  </label>
+
+                                </div>
+                              </div>
+                              </div>
+                              {% endfor %}
+                            </div>
+                            {% elif questions.ans_type==1 %}
+                            <div id="one_line">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label for="exampleInputUsername1">Answer</label>
+                                  {% if attempted==1 or questions.submitted==1 %}
+                                    {% if questions.session_answer and questions.session_answer !=''  %}
+                                    <textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required>{{questions.session_answer}}</textarea>
+                                    {% elif questions.submitted_answer %}
+                                    <textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required>{{questions.submitted_answer}}</textarea>
+                                    {% else %}
+                                    <textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required></textarea>
+                                    {% endif %}
+                                  {% else %}
+                                    <textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required></textarea>
+                                  {% endif %}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="row" style="text-align: center;">
+                            <div class="col-md-12">
+                            {% if ques_no < session['total_ques'] %}
+                              {% if questions.submitted %}
+                                <button type="submit" onclick="next()" class="btn btn-gradient-primary mr-2" id="sub" style="margin: 0.5%;">Update Answer</button>
+                              {% else %}  
+                                <button type="submit" onclick="next()" class="btn btn-gradient-primary mr-2" id="sub" style="margin: 0.5%;">Submit Answer</button>
+                              {% endif %}                                      
+                            {% elif ques_no == session['total_ques'] %}
+                              <button type="submit" onclick="next()" class="btn btn-gradient-success mr-2" id="sub" style="margin: 0.5%;">Finish</button>
+                            {% endif %}
+                            </div>                                  
+                            </div>
+                            <!-- <div class="row" style="text-align: center;color: black">
+                              <div class="col-md-12">
+                                <div id="progressBar">
+                                <div class="bar" style="min-width: 45px;"></div>
+                              </div>
+                              </div>
+                            </div> -->
+                          </form>
+                        </div>
+                        {% if session['q_timer'] == 1 %}
+                        <div class="card-footer">
+                          <div id="progressBar">
+                            <div class="bar" style="min-width: 3.225rem;"></div>
+                          </div>
+                        </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  <!-- div class="col-md-4 stretch-card grid-margin">
+                      <div class="card bg-gradient-success card-img-holder text-white">
+                          <div class="card-body">
+                              <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                              <h4 class="font-weight-normal mb-3">Visitors Online <i class="mdi mdi-diamond mdi-24px float-right"></i>
+                              </h4>
+                              <h2 class="mb-5">95,5741</h2>
+                              <h6 class="card-text">Increased by 5%</h6>
+                          </div>
+                      </div>
+                  </div> -->
+              </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:partials/_footer.html -->
+          <footer class="footer" style="background: #d8e3e7;">
+              <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                  <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021. All rights reserved.</span>
+              </div>
+          </footer>
+          <!-- partial -->
+      </div>
+        <!-- main-panel ends -->
+    </div>
+      <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+  <!-- <script src="{{ url_for('static', filename='js/subject.js')}}"></script> -->
+  <!-- <script src="https://ajax.googleapis.com/aja x/libs/jquery/3.1.0/jquery.min.js"></script> -->
+  
+  <!-- <script src="{{ url_for('static', filename='js/bootstrap.js')}}"></script> -->
+  <script type="text/javascript">
+    $( document ).ready(function() {
+      
+    });
+    $(document).on('click', 'a', false);
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function () {
+      window.history.pushState(null, "", window.location.href);
+    };
+
+    function progress(timeleft, timetotal, $element) {
+      var progressBarWidth = timeleft * $element.width() / timetotal;
+      $element.find('div').animate({ width: progressBarWidth+1 }, 500).html(Math.floor(timeleft/60) + ":"+ timeleft%60);
+      if(timeleft > 0) {
+        setTimeout(function() {
+            progress(timeleft - 1, timetotal, $element);
+        }, 1000);
+      }
+      else if(timeleft >= 15) {
+        
+      }
+      else {
+        alert("Time Finished!")
+        $('#quiz_det').submit();
+      }
+    };
+
+    function next()
+    {
+      // $('form#quiz_det').validate();
+      // $('form#quiz_det').submit();
+    }
+
+    function transfer_data(mode){
+      var $form = $("#quiz_det")
+      dict = {}
+      $form.find(':input').each((index,elem) => {
+        elem_name = $(elem).attr("name")
+        if (elem_name == 'desc_ans'){
+          file = $(elem).prop('files')[0]
+          var elem_val = new FormData();
+          elem_val.append(file.filename, file);
+        }
+        else{
+          elem_val = $(elem).val()
+        }
+        dict[elem_name] = elem_val
+      })
+      console.log(dict,'apna time aayga',mode)
+      $.ajax({
+        url:'/student/submit_question_mode?mode='+mode,
+        method:"POST",
+        data:dict,
+        success:function(response){
+          console.log("success",response)
+        }
+      })
+    }
+
+    function next_ques_old()
+    {
+      alert("next");
+      if($("#one_line").length == 0) {
+        $('#answer').prop('required',false);
+      }
+      else if($("#options").length == 0)
+      {
+        $('[name="option_select"]').prop('required',false);
+      }
+      $("form#quiz_det").attr('action', '/student/submit_question_mode?mode=next');
+      $('form#quiz_det').submit();
+    }
+
+    function previous_ques_old()
+    {
+      if($("#one_line").length == 0) {
+        $('#answer').prop('required',false);
+      }
+      else if($("#options").length == 0)
+      {
+        $('[name="option_select"]').prop('required',false);
+      }
+      $("form#quiz_det").attr('action', '/student/submit_question_mode?mode=prev');
+      $('form#quiz_det').submit();
+    }
+
+  </script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <!-- <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script> -->
+  <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page -->
+  <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+
+  <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <!-- endinject -->
+  <!-- Custom js for this page -->
+  <!-- End custom js for this page -->
+</body>
+
+</html>

@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style type="text/css">
+      .form-control{
+        font-size: 1.000rem;
+      }
+      .form-group label{
+       font-size: 1.0125rem; 
+      }
+      .btn2 {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 2%;
+      }
+      .check {
+        -webkit-touch-callout: none; /*iOS Safari*/
+        -webkit-user-select: none; /*Chrome/Safari/Opera*/
+        -khtml-user-select: none; /*Konqueror*/
+        -moz-user-select: none; /*Firefox*/
+        -ms-user-select: none; /*Internet Explorer/Edge*/
+        user-select: none;/* Non-prefixed version, currently
+        not supported by any browser*/
+      }
+      #progressBar {
+        width: 100%;
+        margin: 0.625rem auto;
+        height: 1.975rem;
+        background-color: #19547b;
+        color: black;
+        font-size: 1.125rem;
+        font-weight: 400;
+      }
+
+      #progressBar div {
+        height: 100%;
+        text-align: right;
+        padding: 0.125rem 0.625rem;
+        line-height: 1.975rem; /* same as #progressBar height if we want text middle aligned */
+        width: 0;
+        background-color: #fdbf43;
+        box-sizing: border-box;
+      }
+
+      #left {
+        float: left;
+      }
+      #right {
+        float:right;
+      }
+      .instruction_list {
+        font-size: 1.5rem;
+      } 
+
+      @media(max-width:768px){
+        .page-header{
+          margin-bottom: 0px!important;
+        }
+        .card-body{
+          padding-top: 0px!important;
+        }
+        .navbar {
+          display: none!important;
+        }
+        .page-body-wrapper{
+          padding-top: 0px!important;
+          height:100vh;
+        }
+        .content-wrapper{
+          padding-bottom: 0px;
+          padding-top: 10px;
+        }
+        .grid-margin{
+          margin-bottom: 10px!important;
+        }
+        #question_desc{
+          overflow-y: scroll!important;
+        }
+      }
+
+    </style>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script>
+        // function checkTime(i) {
+        //   if (i < 10) {
+        //     i = "0" + i;
+        //   }
+        //   return i;
+        // }
+
+        // function hmsToSecondsOnly(str) {
+        //   var p = str.split(':'),
+        //       s = 0, m = 1;
+
+        //   while (p.length > 0) {
+        //       s += m * parseInt(p.pop(), 10);
+        //       m *= 60;
+        //   }
+        //   return s;
+        // 
+        var element = document.querySelector("html");
+
+        
+
+        function fullscreen(){
+          if (element.requestFullscreen){
+              element.requestFullscreen()
+              .then(function() {
+                  $("#sidebar").text("")
+                  $("#sidebar").removeClass("active")
+                  $("#quiz_body").addClass("sidebar-icon-only")
+                  $(".navbar-toggler").prop("disabled",true)
+              })
+              .catch(function(error) {
+                  
+              })
+          }
+        }
+
+        element.onfullscreenchange = handleFullscreenChange
+        
+        function handleFullscreenChange(){
+          if(document.fullscreenElement !== null){
+            $("#test_ins").modal('hide')
+            $("#content").show()
+          }
+          else{
+            $("#content").hide()
+            decrement_counter("no_fullscreen")
+          }
+        }
+
+    
+        function message() {
+          // 
+          var msg = "{{message}}";
+          // 
+          if(msg!="")
+          {
+            $("#myModal").modal();
+            var myModal = $("#myModal");
+            $("#modbod").text(msg);
+            /*clearTimeout(myModal.data('hideInterval'));
+            myModal.data('hideInterval', setTimeout(function(){
+                myModal.modal('hide');
+            }, 3000));*/
+          }
+          {% if session['q_timer'] == 1 %}
+            var time = '{{time_per_ques}}';
+            var time_p = parseInt(time)
+            
+            var today = new Date();
+            // 
+            // var h = today.getHours();
+            // var m = today.getMinutes();
+            // var s = today.getSeconds();
+            // // add a zero in front of numbers<10
+            // m = checkTime(m);
+            // s = checkTime(s);
+            // var now = h + ":" + m + ":" + s;
+            Number.prototype.padLeft = function(base,chr){
+              var  len = (String(base || 10).length - String(this).length)+1;
+              return len > 0? new Array(len).join(chr || '0')+this : this;
+            }
+            var d = new Date;
+            now = [(d.getFullYear()),(d.getMonth()+1).padLeft(),d.getDate().padLeft()].join('-') +' ' +[d.getHours().padLeft(),d.getMinutes().padLeft(),d.getSeconds().padLeft()].join(':');
+
+            var now = new Date(now)
+            // 
+            var finish = new Date("{{session['question_timer_finish']}}")
+            // 
+            
+            // var now_sec = hmsToSecondsOnly(now)
+            // 
+            // var finish_sec = hmsToSecondsOnly(finish)
+            // 
+            // var secs_remaining = finish_sec - now_sec
+            var secs_remaining = Math.abs(finish - now) / 1000;
+            // 
+             // split it at the colons
+            // minutes are worth 60 seconds. Hours are worth 60 minutes.
+            
+            // 
+            progress(time_p, time_p, $('#progressBar'));
+          {% endif %}
+        }
+        
+        
+        $(window).focus(function () {
+      //do something
+               
+        });
+
+        $(window).blur(function (){
+          
+          if($('#test_ins').is(':visible') === false){
+
+            if (document.fullscreenElement === null){
+            decrement_counter('switch_tab')
+            }
+            else{
+              decrement_counter('switch_tab')
+            } 
+            }
+        })
+
+         function decrement_counter(flag){
+              //do something
+          
+          var dat = {get_focus: 0};  
+          $.ajax({
+            url: '/student/browser_switch/',
+            data: dat,
+            type: 'POST',
+            success: function(response){
+              
+              
+              $("#myModal").modal('show');
+              var myModal = $("#myModal");
+              if (flag == 'switch_tab'){
+                
+                $("#modbod").text("Warning: You Can't Switch your Tab more than "+(parseInt("{{session['max_limit']}}") - parseInt(response)) +" times");
+              }
+              else{
+                $('#myModal').modal({
+                  backdrop: 'static',
+                  keyboard: false
+              })
+                $("#modbod").text(`Warning: Don't Remove FullScreen. You quiz will end after ${(parseInt("{{session['max_limit']}}") - parseInt(response))} tries`);
+              }
+              /*clearTimeout(myModal.data('hideInterval'));
+              myModal.data('hideInterval', setTimeout(function(){
+                  myModal.modal('hide');
+              }, 3000));*/
+              if(parseInt("{{session['max_limit']}}") - parseInt(response) == 0  )
+              {
+                $("#myModal").modal('show');
+                var myModal = $("#myModal");
+                $("#modbod_btn").hide()
+                $("#modbod").text("Quiz is Over for you!");
+                setTimeout(() => {
+                  redirect_url = base_url+'/student/quiz_finish/';
+                  window.location.replace(redirect_url);  
+                },2000)
+                
+                var base_url = window.location.origin;
+                
+              }
+              
+            },
+            error: function(error){
+              
+            }
+          });       
+        }
+
+
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        var date = "{{session['quiz_date']}}";
+        setTimeout(function(){xhr.abort();}, 2000);
+        // 
+        var dt_str = new Date(date).toLocaleDateString("en-US", options);
+        dt_str = dt_str+' '+"{{session['quiz_end']}}"
+        // 
+        // 
+        var countDownDate = new Date(dt_str).getTime();
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+
+          // Get today's date and time
+          var now = new Date().getTime();
+
+          // Find the distance between now and the count down date
+          var distance = countDownDate - now;
+
+          // Time calculations for days, hours, minutes and seconds
+          var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          // Display the result in the element with id="demo"
+          document.getElementById("demo").innerHTML = hours + "h "
+          + minutes + "m " + seconds + "s ";
+          console.log(distance);
+          if (distance < 3000 && distance > 0) {
+            document.getElementById("time_card").style = "border:1px solid #a12023!important";
+            document.getElementById("demo").style= "color:#a12023";
+          }
+          // If the count down is finished, write some text
+          else if (distance < 0) {
+            clearInterval(x);
+            var blink_speed = 500;
+            setInterval(() => {
+              document.getElementById("demo").style.visibility = (document.getElementById("demo").style.visibility == 'hidden' ? '' : 'hidden')
+            }, blink_speed); 
+            document.getElementById("time_card").style = "border:1px solid #a12023!important";
+            document.getElementById("demo").innerHTML = "<span>Quiz Time Finished!</span><br><span>Hurry Before Faculty stop the quiz.</span>";
+            document.getElementById("demo").style= "color:#a12023";
+            // var base_url = window.location.origin;
+            // redirect_url = base_url+'/student/quiz_finish/';
+            
+            // window.location.replace(redirect_url); 
+          }
+        }, 1000);
+
+        $(document).ready(() => {
+          $('.ajax-loader').css("visibility", "hidden");
+          $('body').bind('cut copy paste', function(event) {
+            event.preventDefault();
+            });
+          $(document).ajaxSend(function(){
+            $('.ajax-loader').css("visibility", "visible");
+          });
+          $(document).ajaxComplete(function(){
+            $('.ajax-loader').css("visibility", "hidden");
+          });
+          $("#modbod_btn").click(function(){
+            $("#content").show()
+            $("#myModal").modal("hide")
+            fullscreen()
+          })
+
+           $("#upload_form").submit((e) =>{
+            e.preventDefault()
+            transfer_data('submit',"POST")
+            return false
+          })
+
+         $("#test_ins").modal('show'); 
+         $("#content").hide()        
+          //$("#gofull").trigger('click')
+          //***************UPLOADING FILES********************
+          $("#desc").on("click","#upload_btn",()=>{
+            $("#upload").trigger('click')
+          })
+          $("#desc").on("change","#upload",() =>{
+            var file = $("#upload").prop('files')[0]
+            if (file.type != 'application/pdf' ){
+              
+              $("#upload").val("")
+              return
+            }
+            
+            $('#filename').text(file.name)
+
+          })   
+      }) // document ready ends
+
+      function next_ques(){
+            /*if($("#one_line").length == 0) {
+                $('#answer').prop('required',false);
+              }
+              else if($("#options").length == 0)
+              {
+                $('[name="option_select"]').prop('required',false);
+              }*/
+            transfer_data('next',"POST")
+          }
+
+          function prev_ques(){
+            /*if($("#one_line").length == 0) {
+              $('#answer').prop('required',false);
+            }
+            else if($("#options").length == 0)
+            {
+              $('[name="option_select"]').prop('required',false);
+            }*/
+            transfer_data('prev',"POST")
+          }
+
+      
+
+      function transfer_data(mode,method){
+            var $form = $("#upload_form")
+            let dict = {}
+            let arr = new FormData()
+            let desc_flag = 0
+
+            $form.find(':input').each((index,elem) => {
+
+                elem_name = $(elem).attr("name")
+
+                if (elem_name == 'desc_ans'){
+                  desc_flag = 1
+
+                  file = $(elem).prop('files')[0]
+                  if (file){
+                    
+                    arr.append('desc_ans',file);
+
+                  }else{
+                    arr.append('desc_ans',"")
+                  }
+                }
+                else if(elem_name === 'option_select'){
+                  dict[elem_name] = $("input[name='option_select']:checked","#upload_form").val()                  
+                  return false
+                }
+              else{
+                elem_val = $(elem).val()
+                dict[elem_name] = elem_val
+                arr.append(elem_name,elem_val)
+              }
+
+            })
+            if(desc_flag === 1){
+              arr.append('ques_no',$("#q_no").attr("name"))
+              arr.append('desc_name',$("#filename").text())
+            }
+            dict["desc_name"] = $("#filename").text()
+            dict["ques_no"] = $("#q_no").attr("name")
+            console.log([...arr])
+            let url
+            if (mode === 'next' || mode === 'prev'){
+              url = '/student/submit_question_mode?mode='+mode
+            }else{
+              console.log("outhere balling")
+              url = '/student/submit_question/'
+            }
+
+            console.log(dict,'dicttttttttt')
+            $.ajax({
+              url:url,
+              method:method,
+              data:desc_flag == 1?arr:dict,
+              processData:desc_flag == 1?false:true,
+              contentType:desc_flag == 1?false:"application/x-www-form-urlencoded; charset=UTF-8",
+              cache:desc_flag == 1?false:true,
+              success:function(response){
+                
+                if(response == "end quiz"){
+                  redirect_url = '/student/quiz_submitted/'
+                  window.location.replace(redirect_url)
+                }
+                if (mode === 'submit'){
+                  if(response.msg === 'end'){
+                    //var base_url = window.location.origin;
+                    redirect_url = '/student/quiz_finish/'
+
+                    window.location.replace(redirect_url)
+                  }
+                  else{
+                    transfer_data('next','GET')
+                  }
+                }
+
+                if(response.question_status && response.question_status === 'saved'){
+                  next_ques()
+                  
+                  return
+                }
+
+                $('#q_no').text("Q "+response.ques_no+"." )
+                $('#q_no').attr("name",response.ques_no)
+                $("#question_id").val(response.questions.q_id)
+                $("#question_desc").val(response.questions.question)
+                $("#ans_type").val(response.questions.ans_type)
+
+                                  $("#submit_btn").html("")
+                  let submit_btn_div = ``
+                  if(response.ques_no < response.total_ques){
+                    if (response.questions.submitted)
+                      submit_btn_div = `<button type="submit" onclick="next()" class="btn btn-gradient-primary mr-2" id="sub" style="margin: 0.5%;">Update Answer</button>`
+                    else
+                      submit_btn_div = `<button type="submit" onclick="next()" class="btn btn-gradient-primary mr-2" id="sub" style="margin: 0.5%;">Submit Answer</button>`
+                  }
+                  else if (response.ques_no == response.total_ques){
+                    submit_btn_div = `<button type="submit" onclick="next()" class="btn btn-gradient-success mr-2" id="sub" style="margin: 0.5%;">Finish</button>`
+                  }
+
+                  $("#navigation_btn").html("")
+                  let next = ''
+                  let prev = ''
+                  if (response.ques_no > 1)
+                    next = `<button class="btn btn-gradient-primary btn-icon" style="padding: 1%;font-size: 1.1rem;" id="left" onclick="prev_ques()">&lt;</button>`
+                  
+                  if (response.ques_no <  response.total_ques)
+                    prev = `<button class="btn btn-gradient-primary btn-icon" style="padding: 1%;font-size: 1.1rem;" id="right" onclick="next_ques()">&gt;</button>`
+
+                  $("#navigation_btn").append(next).append(prev)
+
+                  $("#submit_btn").append(submit_btn_div)
+
+                if(response.questions.ans_type == 0){
+                  $("#one_line").html("").hide()
+                  $("#desc").html("").hide()
+                  $("#options").html("")
+                  $("#options").show()
+
+                  
+
+                  let total = response.total
+                  if (response.questions.opt1 !='-'){
+                    total += 1
+                  }
+                  if (response.questions.opt2 !='-'){
+                    total += 1
+                  }
+                  if (response.questions.opt3 !='-'){
+                    total += 1
+                  }
+                  if (response.questions.opt4 !='-'){
+                    total += 1
+                  }
+
+                  let options = ''
+
+                  
+                  for(let i = 1; i<total+1;i++){
+
+                    options += `
+                                <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-check">
+                                    <label class="form-check-label" style="font-size: 1.025rem;">
+                                `
+                    if(response.attempted == 1 || response.questions.submitted == 1){
+                      if (response.questions.session_answer && response.questions.session_answer !=''){
+                        
+                        let opt_select = response.questions.session_answer.slice(-1)
+                        if (opt_select == i){
+                          options += (`<input type="radio" class="form-check-input" name="option_select" value="${i}" id="optionRadios${i}" checked>`)
+                        }
+                        else{
+                          options+= (`<input type="radio" class="form-check-input" name="option_select" value="${i}" id="optionRadios${i}" required="required">`)
+                        }
+                      }
+                      else if(response.questions.submitted_answer){
+                         let opt_select = (response.questions.submitted_answer.slice(-1))
+                        if (opt_select == i){
+                          options += (`<input type="radio" class="form-check-input" name="option_select" value="${i}" id="optionRadios${i}" checked>`)
+                        }
+                        else{
+                         options+= (`<input type="radio" class="form-check-input" name="option_select" value="${i}" id="optionRadios${i}" required="required">`)
+                        }
+                      }
+                      else{
+                        options+= (`<input type="radio" class="form-check-input" name="option_select" value="${i}" id="optionRadios${i}" required="required">`)
+                      }
+                    }
+                    else{
+                      options+= (`<input type="radio" class="form-check-input" name="option_select" value="${i}" id="optionRadios${i}" required="required">`)
+                    }
+
+                    switch(i){
+                      case 1:
+                        options+=  (response.questions.opt1)
+                        break
+                      case 2:
+                        options+=  (response.questions.opt2)
+                        break
+                      case 3:
+                        options+=  (response.questions.opt3)
+                        break
+                      case 4:
+                        options+=  (response.questions.opt4)
+                        break
+                    }
+                     options+=  `<i class="input-helper"></i></label>
+                                </div>
+                              </div>
+                              </div>
+                              `
+                    
+                  }
+                  //end for
+                  $("#options").append(options)
+                }
+
+                else if(response.questions.ans_type == 1){
+                  $("#desc").html("").hide()
+                  $("#options").html("").hide()
+                  $("#one_line").html("").show()
+                  $("#one_line_container").show()
+
+                  let one_line =''
+                  one_line += `<label for="exampleInputUsername1">Answer</label>`
+                  if (response.attempted==1 || response.questions.submitted==1){
+                    if (response.questions.session_answer && response.questions.session_answer !=''){
+                      one_line += (`<textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required>${response.questions.session_answer}</textarea>`)
+                    }
+                    else if (response.questions.submitted_answer){
+                      one_line +=(`<textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required>${response.questions.submitted_answer}</textarea>`)
+                    }
+                    else{
+                      one_line += (`<textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required></textarea>`)
+                    }
+                  }
+                  else{
+                      one_line += (`<textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required></textarea>`)
+                  }
+                  
+                  $("#one_line").append(one_line)
+                }
+                
+                else if(response.questions.ans_type == 2){
+                  $("#desc").html("").show()
+                  $("#options").html("").hide()
+                  $("#one_line").html("").hide()
+                  $("#one_line_container").hide()
+
+                  desc_ans = ""
+                  desc_ans += `<div class="drag-area">
+                                      <div class="icon"><i class="fa fa-cloud-upload" aria-hidden="true" style='color:#1a75ff'></i></div>
+                                        <span><button id='upload_btn' type='button'>Browse File</button>&nbsp;&nbsp;<small>( .pdf)</small></span>
+                                        <input id='upload' name ='desc_ans' type="file" hidden>`
+                  
+                  if (response.attempted==1 || response.questions.submitted==1){
+                    if (response.questions.session_answer && response.questions.session_answer !=''){
+                      desc_ans += (`<small id='filename'>${response.questions.session_answer.split("N-N")[1]}</small>`)
+                    }
+                    else if (response.questions.submitted_answer){
+                      desc_ans +=(`<small id='filename'>${response.questions.submitted_answer.split("N-N")[1]}</small>`)
+                    }
+                    else{
+                      desc_ans += (`<small id='filename'></small>`)                    }
+                  }
+                  else{
+                    desc_ans += (`<small id='filename'></small>`)
+                  }
+                  desc_ans+= `</div></div>`
+                  $("#desc").append(desc_ans)
+                }
+
+              }
+              
+            })
+        }
+      
+
+       
+
+
+          {% if questions.opt1!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+          {% if questions.opt2!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+          {% if questions.opt3!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+          {% if questions.opt4!='-' %}
+            {% set total = total+1 %}
+          {% endif %}
+    </script>    
+
+</head>
+
+<body id="quiz_body" onload="message()" oncopy="return false" onpaste="return false" onreturn="return false">
+    <div id='test_ins' data-backdrop="static" data-keyboard="false"  class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div  class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Test Instructions</h5>
+          </div>
+          <ol class='instruction_list' style="margin-left:20px">
+            <li>Once you enter fullscreen, you won't be able to change the tab or exit until completion.</li>
+            <li>Please attempt the test sincerely.</li>
+            <li>Any malpractice observed during the test will result into disqualification.</li>
+            <li>Once you lose your chances of switching the tab the quiz will stop automatically.</li>
+            <h3 style="text-align: center;margin-top: 1rem;">*****<b> It's better to Fail than to Cheat </b>*****</h3>
+          </ol>
+          <br />  
+          <center><button id='start_quiz_btn' type='button'  onclick = "fullscreen()" class="btn btn-info mb-4" >Start Test</button></center>
+        </div>
+      </div>
+    </div>
+    <div  class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color: #C30;">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="color: white;border-bottom-color: gray;">
+              <h4 class="modal-title">Validation Message</h4>
+              <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body" style="color: white;">
+              <h4 id="modbod"></h4>
+              <div id='modbod_body'></div>
+            </div>
+            <!-- Modal footer -->
+           <div class="modal-footer">
+              <button id="modbod_btn" class='btn btn-outline-warning'>Go Back</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    {% include "loader.html" ignore missing %}
+    <div id='content' class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+            <!-- partial -->
+            <div class="main-panel" id='contain'>
+              <div class="content-wrapper" style="background: #d8e3e7;">
+                <div class="page-header">
+<!--                   <div class="row"> -->
+                    <div style="width: 20%;padding-left: 2%;padding-top: 2%;">
+                      <h3 class="page-title">
+                          <span class="page-title-icon bg-gradient-primary2 text-white mr-2"><i class="mdi mdi-pencil"></i></span>Quiz 
+                      </h3>
+                    </div>
+                    <div style="width: 80%; margin-left:auto; margin-right:0;">
+                      <div class="row">
+                        <div class="col-md-12 grid-margin">
+                          <div class="card content pull-right" id="time_card" style="position: relative;border: 1px solid black;border-radius: 7%;float: right;text-align: center;">
+                            <div class="card-body" style="padding: 0.500rem;">
+                              <h4 class="card-title">Time Remaining:</h4>
+                              <p id="demo" style="font-size: 1.325rem;font-style: bold;"></p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div style="width: 20%;"> -->
+                      <nav aria-label="breadcrumb">
+                        <ul class="breadcrumb">
+                          <li class="breadcrumb-data active" aria-current="page">
+                            <span></span> </i>
+                          </li>
+                        </ul>
+                      </nav>
+                    <!-- </div> -->
+                  <!-- </div>   -->
+                </div>
+                    <div class="row" style="margin-top: 1%;">
+                      <div id="navigation_btn" class="col-md-12">
+                        {% if ques_no>1 %}
+                        <button class="btn btn-gradient-primary btn-icon" style="padding: 1%;font-size: 1.1rem;" id="left" onclick="prev_ques()">&lt;</button>
+                        {% endif %}
+                        {% if ques_no < session['total_ques'] %}
+                        <button class="btn btn-gradient-primary btn-icon" style="padding: 1%;font-size: 1.1rem;" id="right" onclick="next_ques()">&gt;</button>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="row" style="margin-top: 1.5%;">
+                        <div class="col-md-12 grid-margin">
+                            <div class="card" style="width: 100%;margin-left: 0%;margin-right: 0%;">
+                              <div class="card-body">
+
+                                <form id ='upload_form' enctype="multipart/form-data" class="forms-sample mt-5 check" id="quiz_det" action="/student/submit_question/" method="POST">
+                                  <h4 id='q_no' name="{{ques_no}}" value={{ques_no}} >Q {{ ques_no }}.</h4>
+                                  <div class="form-group">
+                                    <textarea class="form-control check" style="font-size: 1.125rem;" rows="5" disabled="" id="question_desc" name='question_desc'>{{questions.question}}</textarea>
+                                    <input type="hidden" id='question_id' name="question_id" value="{{questions.q_id}}">
+                                    <input type="hidden" id='ans_type' name="ans_type" value="{{questions.ans_type}}">
+                                  </div>
+                                  
+                                  
+                                  <div id="options">
+                                    {% if questions.ans_type==0 %}
+
+                                      {% for j in range(1,total+1) %}
+                                      <div class="row">
+                                      <div class="col-md-12">
+                                        <div class="form-check">
+                                          <label class="form-check-label" style="font-size: 1.025rem;">
+                                            {% if attempted==1 or questions.submitted==1 %}
+                                              {% if questions.session_answer and questions.session_answer !=''  %}
+                                                {% set opt_select = questions.session_answer[-1] | int %}  
+                                                {% if opt_select == j %}
+                                                <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" checked>
+                                                {% else %}
+                                                <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" required="required">
+                                                {% endif %}
+                                              {% elif questions.submitted_answer %}
+                                                {% set opt_select = questions.submitted_answer[-1] | int %}  
+                                                {% if opt_select == j %}
+                                                <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" checked>
+                                                {% else %}
+                                                <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" required="required">
+                                                {% endif %}
+                                              {% else %}
+                                                <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" 
+                                              required="required">
+                                              {% endif %}
+                                            {% else %}
+                                              <input type="radio" class="form-check-input" name="option_select" value="{{j}}" id="optionRadios{{j}}" 
+                                              required="required">
+                                            {% endif %}
+                                            {% if j == 1 %}
+                                              {{questions.opt1}}
+                                            {% elif j == 2 %}
+                                              {{questions.opt2}}
+                                            {% elif j == 3 %}
+                                              {{questions.opt3}}
+                                            {% elif j == 4 %}
+                                              {{questions.opt4}}
+                                            {% endif %}  
+                                            <i class="input-helper"></i>
+                                            
+                                          </label>
+
+                                        </div>
+                                      </div>
+                                     
+                                    </div>
+                                    {% endfor %}
+                                   {% endif %}
+                                  </div>
+                                  
+                                  <div >
+                                    <div class="row" id="one_line_container">
+                                      <div class="col-md-12">
+                                        <div class="form-group" id="one_line">
+                                        {% if questions.ans_type==1 %}
+
+                                          <label for="exampleInputUsername1">Answer</label>
+                                          {% if attempted==1 or questions.submitted==1 %}
+                                            {% if questions.session_answer and questions.session_answer !=''  %}
+                                            <textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required>{{questions.session_answer}}</textarea>
+                                            {% elif questions.submitted_answer %}
+                                            <textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required>{{questions.submitted_answer}}</textarea>
+                                            {% else %}
+                                            <textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required></textarea>
+                                            {% endif %}
+                                          {% else %}
+                                            <textarea class="one form-control" name="one_line_ans" id="answer" placeholder="Write Answer Here....." rows="2" required></textarea>
+                                          {% endif %}
+
+                                        {% endif %}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div id='desc' align='center'>
+                                  {% if questions.ans_type==2%}
+
+                                    <div class="drag-area">
+                                      <div class="icon"><i class="fa fa-cloud-upload" aria-hidden="true" style='color:#1a75ff'></i></div>
+                                        <span><button id='upload_btn' type='button'>Browse File</button>&nbsp;&nbsp;<small>( .pdf)</small></span>
+                                        <input id='upload' name ='desc_ans' type="file" hidden>
+                                        <small id='filename'></small>
+                                      </div>
+                                    </div>
+                                  {% endif %}
+                                </div>
+
+                                 <div class="row" style="text-align: center;">
+                                  <div id="submit_btn" class="col-md-12">
+                                  {% if ques_no < session['total_ques'] %}
+                                    {% if questions.submitted %}
+                                      <button type="submit" onclick="next()" class="btn btn-gradient-primary mr-2" id="sub" style="margin: 0.5%;">Update Answer</button>
+                                    {% else %}  
+                                      <button type="submit" onclick="next()" class="btn btn-gradient-primary mr-2" id="sub" style="margin: 0.5%;">Submit Answer</button>
+                                    {% endif %}                                      
+                                  {% elif ques_no == session['total_ques'] %}
+                                    <button type="submit" onclick="next()" class="btn btn-gradient-success mr-2" id="sub" style="margin: 0.5%;">Finish</button>
+                                  {% endif %}
+                                  </div>                                     
+                                 </div>
+                                 <!-- <div class="row" style="text-align: center;color: black">
+                                   <div class="col-md-12">
+                                     <div id="progressBar">
+                                      <div class="bar" style="min-width: 45px;"></div>
+                                    </div>
+                                   </div>
+                                 </div> -->
+                                </form>
+                              </div>
+                              {% if session['q_timer'] == 1 %}
+                              <div class="card-footer">
+                                <div id="progressBar">
+                                  <div class="bar" style="min-width: 3.225rem;"></div>
+                                </div>
+                              </div>
+                              {% endif %}
+                            </div>
+                          </div>
+                        <!-- div class="col-md-4 stretch-card grid-margin">
+                            <div class="card bg-gradient-success card-img-holder text-white">
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                    <h4 class="font-weight-normal mb-3">Visitors Online <i class="mdi mdi-diamond mdi-24px float-right"></i>
+                                    </h4>
+                                    <h2 class="mb-5">95,5741</h2>
+                                    <h6 class="card-text">Increased by 5%</h6>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer" style="background: #d8e3e7;">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021. All rights reserved.</span>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <!-- <script src="{{ url_for('static', filename='js/subject.js')}}"></script> -->
+    <!-- <script src="https://ajax.googleapis.com/aja x/libs/jquery/3.1.0/jquery.min.js"></script> -->
+    
+    <!-- <script src="{{ url_for('static', filename='js/bootstrap.js')}}"></script> -->
+    <script type="text/javascript">
+  
+      $(document).on('click', 'a', false);
+      window.history.pushState(null, "", window.location.href);
+      window.onpopstate = function () {
+          window.history.pushState(null, "", window.location.href);
+      };
+
+      function progress(timeleft, timetotal, $element) {
+        var progressBarWidth = timeleft * $element.width() / timetotal;
+        $element.find('div').animate({ width: progressBarWidth+1 }, 500).html(Math.floor(timeleft/60) + ":"+ timeleft%60);
+        if(timeleft > 0) {
+          setTimeout(function() {
+              progress(timeleft - 1, timetotal, $element);
+          }, 1000);
+        }
+        else if(timeleft >= 15) {
+          
+        }
+        else {
+          
+          $('#quiz_det').submit();
+        }
+      };
+
+      function next()
+      {
+        // $('form#quiz_det').validate();
+        // $('form#quiz_det').submit();
+      }
+
+          
+
+
+
+
+        
+
+
+        
+        
+      
+
+    </script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <!-- <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script> -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <!-- End custom js for this page -->
+</body>
+
+</html>

@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Edit Quiz </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.timepicker.min.css')}}">
+    <style type="text/css">
+      .required:after {
+        content:" *";
+        color: red;
+        font-size: 1.0rem;
+      }
+      #card_preview{
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+      }
+      @media (max-width: 600px) {
+        #card_preview { 
+          width: 99%; 
+          margin-left: 0.5%;
+          margin-right: 0.5%;
+        }
+      }
+    </style>
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function message() {
+          // alert("Body loaded!");
+          var msg = "{{message}}";
+          // alert("{{data}}");
+          if(msg!="")
+          {
+            $("#myModal").modal();
+            var myModal = $("#myModal");
+            clearTimeout(myModal.data('hideInterval'));
+            myModal.data('hideInterval', setTimeout(function(){
+                myModal.modal('hide');
+            }, 3000));
+          }
+          show_time_option();
+          show_subject();
+        }
+    </script>
+</head>
+
+<body onload="message()">
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color: #C30;">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="color: white;border-bottom-color: gray;">
+              <h4 class="modal-title">Validation Message</h4>
+              <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body" style="color: white;">
+              <h4 id="modal_msg"></h4>
+            </div>
+            <!-- Modal footer -->
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div> -->
+          </div>
+        </div>
+    </div>
+    {% include "loader.html" ignore missing %}
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper" style="background: #d8e3e7;">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary2 text-white mr-2"><i class="mdi mdi-pencil"></i></span> Preview Quiz 
+                        </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-data active" aria-current="page">
+                                    <span></span> </i>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 grid-margin">
+                        {% if msg!="" %}
+                          <div class="card" style="width: 80%;margin-left: 10%;margin-right: 10%;">
+                            <div class="card-body">
+                              <h4 class="card-title">Preview Quiz Details</h4>
+                              <p class="card-description">{{msg}}</p>
+                            </div>
+                          </div>
+                        {% else %}
+                          <div class="card" id="card_preview">
+                            <div class="card-body">
+                              <h4 class="card-title">Preview Quiz Details 
+                                {% if permission_to_start==1 %}
+                                <button class="btn btn-gradient-dark btn-icon-text btn-rounded btn-fw" id="btnstart" 
+                                style="background: linear-gradient(to right, #9a55ff, #9a55ff);margin:2%;padding-top:1.5%;padding-right: 5%;padding-left: 5%;padding-bottom: 1.5%;" onclick="start_stop_responses(1)">Start Quiz<i class="mdi mdi-clock"  style="padding-left: 10px;font-style: bold;font-weight: 900;"></i></button> 
+                                {% endif %}
+                              </h4>
+                              <p class="card-description"></p>
+                              <form class="forms-sample mt-3" id="quiz_det" action="/quiz/update_quiz_det/" onsubmit="return check_others_time();" method="post">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label required">Quiz Type</label>
+                                    <div class="col-sm-4">
+                                      <div class="form-check">
+                                        <label class="form-check-label">
+                                          {% if quiz_det.quiz_type=='0' %}
+                                          <input type="radio" class="form-check-input" name="quiz_type" id="quiz_type_s" value="0" onclick="show_subject()" checked>Subjective <i class="input-helper"></i></label>
+                                          {% else %}
+                                          <input type="radio" class="form-check-input" name="quiz_type" id="quiz_type_s" value="0" onclick="show_subject()">Subjective <i class="input-helper"></i></label>
+                                          {% endif %}
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                      <div class="form-check">
+                                        <label class="form-check-label">
+                                          {% if quiz_det.quiz_type=='1' %}
+                                          <input type="radio" class="form-check-input" id="quiz_type_o" name="quiz_type" value="1" onclick="show_subject()" required checked> Other <i class="input-helper"></i></label>
+                                          {% else %}
+                                          <input type="radio" class="form-check-input" id="quiz_type_o" name="quiz_type" value="1" onclick="show_subject()" required> Other <i class="input-helper"></i></label>
+                                          {% endif %}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="exampleInputUsername1">Title</label>
+                                  <input type="text" class="form-control" name="quiz_title" id="quiz_title" value="{{quiz_det.q_title}}" placeholder="Quiz Title" required>
+                                  <input type="hidden" value="{{quiz_det.quiz_id}}" name="quiz_index">
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect3">Department</label>
+                                        <select class="form-control form-control-sm" name="dept" id="dept" required>
+                                          <option value="" disabled>Select</option>
+                                          {% if quiz_det.q_dept=='CSE' %}
+                                          <option value="CSE" selected>CSE</option>
+                                          {% else %}
+                                          <option value="CSE">CSE</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_dept=='IT' %}
+                                          <option value="IT" selected>IT</option>
+                                          {% else %}
+                                          <option value="IT">IT</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_dept=='ETRX' %}
+                                          <option value="ETRX" selected>ETRX</option>
+                                          {% else %}
+                                          <option value="ETRX">ETRX</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_dept=='AI-DS' %}
+                                          <option value="AI-DS" selected>AI-DS</option>
+                                          {% else %}
+                                          <option value="AI-DS">AI-DS</option>
+                                          {% endif %}
+                                        </select>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect3">Semester</label>
+                                        <select class="form-control form-control-sm" name="sem" id="sem" required>
+                                          <option value="" disabled>Select</option>
+                                          {% if quiz_det.q_sem=='1' %}
+                                          <option value="1" selected>1</option>
+                                          {% else %}
+                                          <option value="1">1</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_sem=='2' %}
+                                          <option value="2" selected>2</option>
+                                          {% else %}
+                                          <option value="2">2</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_sem=='3' %}
+                                          <option value="3" selected>3</option>
+                                          {% else %}
+                                          <option value="3">3</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_sem=='4' %}
+                                          <option value="4" selected>4</option>
+                                          {% else %}
+                                          <option value="4">4</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_sem=='5' %}
+                                          <option value="5" selected>5</option>
+                                          {% else %}
+                                          <option value="5">5</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_sem=='6' %}
+                                          <option value="6" selected>6</option>
+                                          {% else %}
+                                          <option value="6">6</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_sem=='7' %}
+                                          <option value="7" selected>7</option>
+                                          {% else %}
+                                          <option value="7">7</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_sem=='8' %}
+                                          <option value="8" selected>8</option>
+                                          {% else %}
+                                          <option value="8">8</option>
+                                          {% endif %}
+                                        </select>
+                                      </div>
+                                  </div>
+                                 </div>
+                                <div class="row">
+                                  <div class="col-md-6" id="subject_div">
+                                    <div class="form-group">
+                                      <label for="exampleInputConfirmPassword1">Subject</label>
+                                      <select class="form-control form-control-sm" name="sub" id="sub" required>
+                                          <option value="" disabled selected>Select</option>
+                                          {% for subject in sub %}
+                                            {% if subject==quiz_det.q_sub %}
+                                            <option value="{{subject}}" selected>{{subject}}</option>
+                                            {% else %}
+                                            <option value="{{subject}}">{{subject}}</option>
+                                            {% endif %}
+                                          {% endfor %}
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <label for="exampleInputConfirmPassword1">Batch</label>
+                                      <select class="form-control form-control-sm" name="batch" id="batch" required>
+                                          <option value="" disabled>Select</option>
+                                          {% if quiz_det.q_batch=='All' %}
+                                          <option value="All" selected>All</option>
+                                          {% else %}
+                                          <option value="All">All</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_batch=='1' %}
+                                          <option value="1" selected>1</option>
+                                          {% else %}
+                                          <option value="1">1</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_batch=='2' %}
+                                          <option value="2" selected>2</option>
+                                          {% else %}
+                                          <option value="2">2</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_batch=='3' %}
+                                          <option value="3" selected>3</option>
+                                          {% else %}
+                                          <option value="3">3</option>
+                                          {% endif %}
+                                          {% if quiz_det.q_batch=='4' %}
+                                          <option value="4" selected>4</option>
+                                          {% else %}
+                                          <option value="4">4</option>
+                                          {% endif %}
+                                      </select>
+                                    </div>
+                                  </div>
+                                 </div>
+                                 <div class="row">
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <label for="exampleInputConfirmPassword1">Date</label>
+                                      <input type="date" class="form-control" value="{{quiz_det.q_date}}" name="date" id="quiz_date" placeholder="Date for Quiz " required>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <label for="exampleInputConfirmPassword1">Start Time</label>
+                                      <!-- <input type="time" class="form-control" onchange="settime()" value="{{quiz_det.q_time_start}}" name="s_time" id="starttime" placeholder="Time for Quiz" required> -->
+                                      <input type="text" class="form-control" value="{{quiz_det.q_time_start}}" name="s_time" id="starttime" placeholder="Time for Quiz" required>
+                                      <!-- <input type="text" class="form-control" name="s_time" id="starttime" placeholder="Time for Quiz" required> -->
+                                    </div>
+                                  </div>
+                                 </div>
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <label for="exampleInputConfirmPassword1">End Time</label>
+                                      <input type="text" onchange="checktime()" class="form-control" value="{{quiz_det.q_time_end}}" name="e_time" id="endtime" placeholder="Time for Quiz" required>
+                                      <!-- <input type="text" onchange="checktime()" class="form-control" name="e_time" id="endtime" placeholder="Time for Quiz" required> -->
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group row">
+                                      <label class="col-sm-3 col-form-label">View Score (Students)</label>
+                                      <div class="col-sm-4">
+                                        <div class="form-check">
+                                          <label class="form-check-label">
+                                            {% if quiz_det.show_answer==1 %}
+                                            <input type="radio" class="form-check-input" name="view_score" id="membershipRadios1" value="Yes" checked> Yes <i class="input-helper"></i>
+                                            {% else %}
+                                            <input type="radio" class="form-check-input" name="view_score" id="membershipRadios1" value="Yes"> Yes <i class="input-helper"></i>
+                                            {% endif %}              
+                                          </label>
+                                        </div>
+                                      </div>
+                                      <div class="col-sm-5">
+                                        <div class="form-check">
+                                          <label class="form-check-label">
+                                          {% if quiz_det.show_answer==0 %}
+                                          <input type="radio" class="form-check-input" name="view_score" value="No" checked> No <i class="input-helper"></i></label>
+                                          {% else %}
+                                          <input type="radio" class="form-check-input" name="view_score" value="No"> No <i class="input-helper"></i></label>
+                                          {% endif %}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <label class="required" for="exampleInputConfirmPassword1">Warning Limit</label>
+                                      <!-- <input type="time" class="form-control" onchange="settime()" name="s_time" id="starttime" placeholder="Time for Quiz" required> -->
+                                      <input type="number" value={{quiz_det.switch_limit}} class="form-control" name="switch_limit" id="switch_limit" placeholder="Enter the maximum number of warnings" max=100 required>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6" style="display: none;">
+                                    <div class="form-group">
+                                      <label class="required" for="exampleInputConfirmPassword1">Descriptive time limit (in minutes)</label>
+                                      <input type="number" value={{quiz_det.desc_time}} class="form-control" name="desc_time" id="desc_time" placeholder="Enter the time limit in minutes" max=1000 min=0>
+                                    </div>
+                                  </div>
+                                    <div class="col-md-6" style="visibility:hidden;position:absolute;">
+                                      <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Question Timer</label>
+                                        <div class="col-sm-4">
+                                          <div class="form-check">
+                                            <label class="form-check-label">
+                                              {% if quiz_det.q_timer==1 %}
+                                              <input type="radio" class="form-check-input" onclick="show_time_option()" name="up_ques_timer" id="q_t_y" value="Yes" checked> Yes <i class="input-helper"></i></label>
+                                              {% else %}
+                                              <input type="radio" class="form-check-input" onclick="show_time_option()" name="up_ques_timer" id="q_t_y" value="Yes" disabled> Yes <i class="input-helper"></i></label>
+                                              {% endif %}
+                                          </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                          <div class="form-check">
+                                            <label class="form-check-label">
+                                              {% if quiz_det.q_timer==0 %}
+                                              <input type="radio" class="form-check-input" onclick="show_time_option()" name="up_ques_timer" id="q_t_n" value="No" checked> No <i class="input-helper"></i></label>
+                                              {% else %}
+                                              <input type="radio" class="form-check-input" onclick="show_time_option()" name="up_ques_timer" id="q_t_n" value="No"> No <i class="input-helper"></i></label>
+                                              {% endif %}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  <!-- <div class="col-md-6" id="qtd" style="display: none">
+                                    <div class="form-group">
+                                      <label for="exampleInputConfirmPassword1">Question Time Division</label>
+                                      <select class="form-control form-control-sm" name="up_q_time_divide" id="q_time_division">
+                                          {# if quiz_det.q_time_division=='m' #}
+                                          <option value="" disabled>Select</option>
+                                          <option value="m" selected>Manual</option>
+                                          <option value="eq">Equal Time</option>
+                                          {# elif quiz_det.q_time_division=='eq' #}
+                                          <option value="" disabled>Select</option>
+                                          <option value="m" >Manual</option>
+                                          <option value="eq" selected>Equal Time</option>
+                                          {# else #}
+                                          <option value="" disabled selected>Select</option>
+                                          <option value="m" >Manual</option>
+                                          <option value="eq" >Equal Time</option>
+                                          {# endif #}
+                                      </select>
+                                    </div>
+                                  </div> -->
+                                </div>
+                                 <div class="row">
+                                  <div class="col-md-6">
+                                    <button type="submit" class="btn btn-gradient-primary mr-2" style="margin: 5%;">Update</button>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <button type="button" onclick="preview_questions()" class="btn btn-light" style="margin: 5%;">Questions</button>
+                                  </div>
+                                 </div>
+                              </form>
+                            </div>
+                          </div>
+                          
+                          {% endif %}
+                        </div>
+                        <!-- div class="col-md-4 stretch-card grid-margin">
+                            <div class="card bg-gradient-success card-img-holder text-white">
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                    <h4 class="font-weight-normal mb-3">Visitors Online <i class="mdi mdi-diamond mdi-24px float-right"></i>
+                                    </h4>
+                                    <h2 class="mb-5">95,5741</h2>
+                                    <h6 class="card-text">Increased by 5%</h6>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer" style="background: #d8e3e7;">
+                    <!-- <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+                    </div> -->
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.timepicker.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+          $('#starttime').timepicker({
+            timeFormat: 'HH:mm',
+            interval: 10,
+            minTime: '8',
+            maxTime: '11:30pm',
+            startTime: '08:00',
+            scrollbar: true
+          });
+          $('#endtime').timepicker({
+            timeFormat: 'HH:mm',
+            interval: 10,
+            minTime: '8',
+            maxTime: '11:30pm',
+            startTime: '08:00',
+            scrollbar: true
+          });
+          $('.ajax-loader').css("visibility", "hidden");
+        });
+        $("#starttime").keydown(false);
+        $("#endtime").keydown(false);
+        function addtime(time,min){
+          let times=time.split(":");
+          //clear here more than 24 hours
+          min=min%(24*60);
+          times[0]=(parseInt(times[0]))+parseInt(min/60) ;
+          times[1]=parseInt(times[1])+min%60;
+          //here control if hour and minutes reach max
+          if(times[1]>=60) { times[1]=0 ;times[0]++} ;
+          times[0]>=24 ?  times[0]-=24  :null;
+          
+          //here control if less than 10 then put 0 frond them
+          times[0]<10 ? times[0]= "0" + times[0] : null ;
+          times[1]<10 ? times[1]= "0" + times[1] : null ;
+          
+          return times.join(":");
+        }
+
+        $("#btnstart").click(function() {
+          var dat = {start: 1};
+          $.ajax({
+            url: '/quiz/start_stop_quiz/',
+            data: dat,
+            type: 'POST',
+            success: function(response){
+              console.log(response);
+              if(response == 0){
+                $("#myModal").modal('show');
+                var myModal = $("#myModal");
+                $("#modbod").text("Warning: Session destroyed kindly re login into system");
+                clearTimeout(myModal.data('hideInterval'));
+                myModal.data('hideInterval', setTimeout(function(){
+                    myModal.modal('hide');
+                }, 3000));
+              }
+              else if(response == 1){
+                var base_url = window.location.origin;
+                var redirect_url = base_url+"/quiz/show_graph_value?label=Quiz Attempted in %:";
+                window.location.replace(redirect_url);
+              }
+            },
+            error: function(error){
+              console.log(error);
+            }
+          });
+        });
+
+        function settime()
+        {
+            // alert(starttime);
+            // alert(mintime);
+            // alert(maxtime);
+          if($('#quiz_date').val()!='')
+          {
+            var varDate = new Date(($('#quiz_date').val()));
+            var now = new Date();
+            var start_time_set = $('#starttime').val()+":00";
+            var end_time_set = $('#endtime').val()+":00";
+            // alert(start_time_set);
+            // alert(end_time_set);
+            var today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
+            var time_now = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
+            // alert(time_now);
+            if( varDate - now <= 0)
+            {
+              // alert("Same date");
+              if(start_time_set <= time_now){
+                alert("You can't select time which is past");
+                $('#starttime').focus();
+                return false;
+              }
+              else if(start_time_set >= end_time_set){
+                alert("End time should be greater than start time");
+                $('#endtime').focus();
+                return false;
+              }
+              else{
+                // alert("Date and time confirmed!");
+                var starttime = $('#starttime').val();
+                var mintime = addtime(starttime,10);
+                var maxtime = addtime(starttime,300);
+                // alert(now.getHours() + ":" + now.getMinutes());
+                $('#endtime').attr({ 'value': mintime});
+                $('#endtime').attr({ 'value': mintime});
+                $('#endtime').attr({ 'min': mintime});
+                $('#endtime').attr({ 'max': maxtime});
+                return true;
+                // alert("date is today");
+              }
+            }
+            else if( varDate - now > 0)
+            {
+              if(start_time_set >= end_time_set)
+              {
+                alert("End time should be greater than start time");
+                $('#endtime').focus();
+                return false;
+              }
+              else{
+                // alert("Date and time confirmed!");
+                // $('#starttime').attr({ 'min': time_now});
+                // alert("date is today");
+                var starttime = $('#starttime').val();
+                var mintime = addtime(starttime,10);
+                var maxtime = addtime(starttime,300);
+                // alert(now.getHours() + ":" + now.getMinutes());
+                $('#endtime').attr({ 'value': minstime});
+                $('#endtime').attr({ 'value': mintime});
+                $('#endtime').attr({ 'min': mintime});
+                $('#endtime').attr({ 'max': maxtime});
+                return true;
+              }
+            }
+          }
+          else
+          {
+            alert("First Fill Date field!");
+            $('#quiz_date').focus();
+            return false;
+          }
+        }
+        function checktime()
+        {
+            if($('#starttime').val()=="")
+            {
+                alert("First Select Start Time!");
+                $('#endtime').attr({ 'value': '-:-'});
+                $('#starttime').focus();
+            }
+        }
+        function show_time_option()
+        {
+          
+          if($('#q_t_y').is(':checked')){
+            $('#qtd').show();
+            $('#q_time_division').attr('required', 'required');
+          } else {
+              $('#qtd').hide();
+              $('#q_time_division').removeAttr('required')
+          }
+        }
+        function show_subject()
+        {
+         // alert("show")
+         if($('#quiz_type_s').is(':checked')){
+            $('#subject_div').show();
+            $('#sub').attr('required', 'required');
+          } 
+          else {
+            $('#subject_div').hide();
+            $('#sub').removeAttr('required')
+          } 
+        }
+
+        function preview_questions()
+        {        
+          var base_url = window.location.origin;
+          redirect_url = base_url+'/quiz/preview_quiz_question/';
+          // alert(redirect_url);
+          window.location.replace(redirect_url);
+          // alert(base_url);
+          document.getElementById("quiz_det").action = "/quiz/preview_quiz_question/"; 
+        }
+        function check_others_time()
+        {
+          var checked = false;
+          if($('#quiz_date').val()!='')
+          {
+            var varDate = new Date(($('#quiz_date').val()));
+            var now = new Date();
+            var start_time_set = $('#starttime').val()+":00";
+            var end_time_set = $('#endtime').val()+":00";
+            // alert(start_time_set);
+            // 
+            var today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
+            var time_now = (now.getHours()<10?'0':'') + now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes() + ":" + now.getSeconds();
+            // var time_now = now.toLocaleTimeString();
+            // alert(time_now);
+            if( varDate - now <= 0)
+            {
+              // alert("Same date");
+              if(start_time_set <= time_now){
+                alert("You can't select time which is past");
+                $('#starttime').focus();
+                checked =  false;
+              }
+              else if(start_time_set >= end_time_set){
+                alert("End time should be greater than start time");
+                $('#endtime').focus();
+                checked = false;
+              }
+              else{
+                // alert("Date and time confirmed!");
+                var starttime = $('#starttime').val();
+                var mintime = addtime(starttime,10);
+                var maxtime = addtime(starttime,300);
+                // alert(now.getHours() + ":" + now.getMinutes());
+
+                // $('#endtime').attr({ 'value': mintime});
+                // $('#endtime').attr({ 'value': mintime});
+                // $('#endtime').attr({ 'min': mintime});
+                // $('#endtime').attr({ 'max': maxtime});
+
+                checked = true;
+                // alert("date is today");
+              }
+            }
+            else if( varDate - now > 0)
+            {
+              if(start_time_set >= end_time_set)
+              {
+                alert("End time should be greater than start time");
+                $('#endtime').focus();
+                checked = false;
+              }
+              else{
+                // alert("Date and time confirmed!");
+                // $('#starttime').attr({ 'min': time_now});
+                // alert("date is today");
+                var starttime = $('#starttime').val();
+                var mintime = addtime(starttime,10);
+                var maxtime = addtime(starttime,300);
+                // alert(now.getHours() + ":" + now.getMinutes());
+                $('#endtime').attr({ 'value': mintime});
+                $('#endtime').attr({ 'value': mintime});
+                $('#endtime').attr({ 'min': mintime});
+                $('#endtime').attr({ 'max': maxtime});
+                checked = true;
+              }
+            }
+          }
+          else
+          {
+            alert("First Fill Date field!");
+            $('#quiz_date').focus();
+            checked = false;
+          }
+          // alert(checked);
+          if(!$('#quiz_det').attr('validated') && checked)
+          {
+            // alert("Checking Time!!");
+            var check_value = 0;
+            var d = $('#dept').val();
+            var s = $('#sem').val();
+            var b = $('#batch').val();
+            var dt = $('#quiz_date').val();
+            var st = $('#starttime').val();
+            var et = $('#endtime').val();
+
+            var dat = {dept: d, sem: s, batch:b, date: dt, s_time: st, e_time: et};  
+            $.ajax({
+              url: '/quiz/check_others_time/',
+              data: dat,
+              type: 'POST',
+              success: function(response){
+                console.log(response);
+                var check = JSON.parse(response);
+                if(check['msg']=="Yes" || check['msg']=="Started") {
+                  check_value = 0;
+                  if(check['msg']=="Yes")
+                    document.getElementById("modal_msg").innerHTML  = 'The Time slot is already booked by '+ check['fac_det'] + ' for '+ check['quiz_name'] +', Kindly Choose Other Time slot!';
+                  else
+                    document.getElementById("modal_msg").innerHTML  = check['quiz_name'] + " has not been ended by " + check['fac_det'] + " please ask them to End!";
+                  $("#myModal").modal('show');
+                  setTimeout(function(){
+                    $("#myModal").modal('hide');
+                  }, 3000);
+                }
+                else if(check['msg'] == "No") {
+                  check_value = 1;
+                  $('#quiz_det').attr('validated',true);
+                  $('#quiz_det').submit();
+                  return true; 
+                } 
+                // console.log(data)
+                // var subjects = JSON.parse(response.sub);
+                // console.log(data)
+                
+              },
+              error: function(error){
+                console.log(error);
+              }
+            });
+            return false;
+          }
+          else if(checked==false)
+          {
+            return false;
+          }
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/subject.js')}}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script> -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+     <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script> 
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+    <!-- <script src="{{ url_for('static', filename='js/todolist.js')}}"></script> -->
+    <!-- End custom js for this page -->
+</body>
+
+</html>

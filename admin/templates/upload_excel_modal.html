@@ -1,0 +1,114 @@
+<div class="modal fade" id="Upload_xl_stud" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog upload_xl_stud" role="document">
+        <div class="modal-content upload_xl_stud-content">
+            <div class="modal-header border-bottom-0" style="background: linear-gradient(to right, #46c35f, #2aa260);color: white;">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="mdi mdi-upload" aria-hidden="true" style="padding: 5px;font-style: bold;font-weight: 900;"></i>Upload Excel Sheet</h5>
+                <button type="button" class="close" data-dismiss="modal" style="color: white;" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form name="upload_excel" id="upload_excel_form" action="/admin/upload_excel/" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 id="card_header_h5">Instructions:</h5>
+                                </div>
+                                <div class="card-block">
+                                    <ul id="instructions">
+                                    {% if session['data_master_mode']== 'student' %}
+                                        <li>Please upload the file according to the <a target="_blank" href="{{ url_for('static', filename='db_format/student/Student_master.xlsx')}}" onclick="format_creation()" download>Format</a> only.</li>
+                                    {% elif session['data_master_mode']== 'faculty' %}
+                                        <li>Please upload the file according to the <a target="_blank" href="{{ url_for('static', filename='db_format/faculty/Faculty_master.xlsx')}}" onclick="format_creation()" download>Format</a> only.</li>
+                                    {% elif session['data_master_mode']== 'subject' %}
+                                        <li>Please upload the file according to the <a target="_blank" href="{{ url_for('static', filename='db_format/subject/Subject_master.xlsx')}}" onclick="format_creation()" download>Format</a> only.</li>
+                                    {% elif session['data_master_mode']== 'electives_category' %}
+                                        <li>Please upload the file according to the <a target="_blank" href="{{ url_for('static', filename='db_format/electives_category/Electives_Category_master.xlsx')}}" onclick="format_creation()" download>Format</a> only.</li>
+                                    {% elif session['data_master_mode']== 'electives_subject' %}
+                                        <li>Please upload the file according to the <a target="_blank" href="{{ url_for('static', filename='db_format/electives_subject/Electives_Subject_master.xlsx')}}" onclick="format_creation()" download>Format</a> only.</li>
+                                    {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">                
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="preview-zone hidden">
+                                    <div class="box box-solid">
+                                        <div class="box-header with-border">
+                                            <div id="header_file"><b> No File Selected</b></div>
+                                            <div class="box-tools pull-right">
+                                            <button type="button" class="btn btn-gradient-primary btn-xs remove-preview">
+                                                <i class="fa fa-times"></i> Reset The Field
+                                            </button>
+                                            </div>
+                                        </div>
+                                        <div class="box-body"></div>
+                                    </div>
+                                </div>
+                                <div class="dropzone-wrapper">
+                                    <div class="dropzone-desc">
+                                        <i class="glyphicon glyphicon-download-alt"></i>
+                                        <p>Choose an Excel file or drag it here.</p>
+                                    </div>
+                                    <input type="file" name="excel_file" class="dropzone" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required>
+                                    {% if session['data_master_mode'] == 'student' %}
+                                        <input type="hidden" name="mode_ex_up" value="{{stud_type}}">
+                                    {% elif session['data_master_mode'] == 'faculty' or session['data_master_mode'] == 'subject' or session['data_master_mode'] == 'electives_subject'%}
+                                        <input type="hidden" name="mode_ex_up" value="{{sub_type}}">
+                                    {% elif session['data_master_mode'] == 'electives_category' %}
+                                        <input type="hidden" name="mode_ex_up" value="{{sem}}">
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 d-flex justify-content-center">
+                    <div class="row" style="display: contents;text-align: center;">
+                        <div class="col-md-12">
+                        <!-- <button type="submit" class="btn btn-success" style="background: linear-gradient(to right, #46c35f, #2aa260);">Submit</button>     -->
+                            <button type="submit" class="btn btn-gradient-primary" style="background: #0a4f9d;border: 0px;">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="show_result" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog upload_xl_stud" role="document">
+      <div id="mod_color" class="modal-content upload_xl_stud-content">
+        <!-- Modal Header -->
+        <div class="modal-header border-bottom-0" style="background: linear-gradient(to right, #46c35f, #2aa260);color: white;">
+            <h5 class="modal-title" id="exampleModalLabel"><i class="mdi mdi-upload" aria-hidden="true" style="padding: 5px;font-style: bold;font-weight: 900;"></i>Upload Excel Sheet</h5>
+            <button type="button" class="close" id="close_report_excel" data-dismiss="modal" style="color: white;" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+            <p class="modal-title" id="total_rec"></p>
+            <ul>
+            <li class="modal-title" id="succ_rec"></li>
+            <li class="modal-title" id="fail_rec"></li>
+            </ul>
+            <p class="modal-title" id="excel_file">All records failed are stored on this file:
+            {% if session['data_master_mode'] == 'student' %}
+                <a href="{{ url_for('static', filename='spreadsheets/'+session['dept']+'/'+session['data_master_mode']+'/'+stud_type+'/'+session['data_master_mode']+'_master_records_addition_failed.xlsx')}}" target="_blank" download>
+            {% elif session['data_master_mode'] == 'faculty' %}
+                <a href="{{ url_for('static', filename='spreadsheets/'+session['dept']+'/faculty/faculty_master_records_addition_failed.xlsx')}}" target="_blank" download>
+            {% elif session['data_master_mode'] == 'subject' or session['data_master_mode'] == 'electives_subject' %}
+                <a href="{{ url_for('static', filename='spreadsheets/'+session['dept']+'/'+session['data_master_mode']+'/'+sub_type+'/'+session['data_master_mode']+'_master_records_addition_failed.xlsx')}}" target="_blank" download>
+            {% elif session['data_master_mode'] == 'electives_category' %}
+                <a href="{{ url_for('static', filename='spreadsheets/'+session['dept']+'/'+session['data_master_mode']+'/'+sem+'/'+session['data_master_mode']+'_master_records_addition_failed.xlsx')}}" target="_blank" download>
+            {% endif %}
+            Failed_Records.xlsx</a>
+            </p>
+        </div>
+      </div>
+    </div>
+</div>

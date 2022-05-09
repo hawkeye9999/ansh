@@ -1,0 +1,165 @@
+footer {
+    background-color: #a12023;
+    color: white;
+    padding-bottom: 0.5%;
+    position: inherit;
+    bottom: 0;
+}
+
+a.logo1234:hover {
+    text-shadow: 0px 0px 2px #ffffff;
+}
+
+footer a {
+    color: white;
+}
+
+footer a:hover {
+    color: white;
+}
+
+.footerlinks {
+    text-align: center;
+    align-items: center;
+}
+
+.footer-left {
+    width: 30%;
+    left: 0;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 3%;
+    padding: 5px
+}
+
+.footer-center {
+    font-size: 16px;
+    width: 40%;
+    text-align: center;
+    line-height: 35px;
+    width: 30%;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 3%;
+}
+
+.footer-right {
+    width: 30%;
+    margin-top: 3%;
+    left: 0;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+}
+/*
+footer {
+    position: relative;
+    bottom: 0;
+} */
+
+/* @media (max-height:800px) {
+    footer {
+        position: static;
+    }
+    header {
+        padding-top: 40px;
+    }
+} */
+
+.footer-left img {
+    width: 25%;
+    -webkit-box-shadow: 0px 0px 33px -3px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 33px -3px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 33px -3px rgba(0, 0, 0, 0.75);
+}
+
+.footer-right img {
+    width: 25%;
+    -webkit-box-shadow: 0px 0px 33px -3px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 33px -3px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 33px -3px rgba(0, 0, 0, 0.75);
+}
+
+@media (max-width: 740px) {
+    .footer-right {
+        display: block;
+        width: 95%;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    .footer-right img {
+        width: 25%;
+    }
+    .footer-left,
+    .footer-center {
+        display: block;
+        width: 40%;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 540px) {
+    .footer-left,
+    .footer-center,
+    .footer-right {
+        display: block;
+        width: 95%;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    .footer-right img {
+        width: 30%;
+    }
+}
+
+a.soci {
+    padding: 2%;
+    display: inline-block;
+    transition: all;
+    transition-duration: 0.5s;
+}
+
+a.soci:hover {
+    position: relative;
+    text-decoration: none;
+    transform: scale(1.4);
+}
+
+a.soci.instagram:hover {
+    color: #dd2a7b;
+}
+
+a.soci.facebook:hover {
+    color: #3967ff;
+}
+
+a.soci.youtube:hover {
+    color: red;
+}
+
+a.soci.linkedin:hover {
+    color: #0e76a8;
+}
+
+a.soci.twitter:hover {
+    color: #009dff;
+}
+
+.logo123:hover {
+    position: relative;
+    text-decoration: none;
+    transform: scale(1.2);
+}
+
+.logo123 {
+    display: inline-block;
+    transition: all;
+    transition-duration: 0.5s;
+}
+
+footer a:hover {
+    text-decoration: none;
+}

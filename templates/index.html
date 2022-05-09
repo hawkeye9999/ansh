@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Dashboard </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="{{ url_for('static', filename='css/toastr.css')}}" rel="stylesheet" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/toastr.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+    $(document).ready(function () {
+        $('.ajax-loader').css("visibility", "hidden");
+        toastr.options = {
+            "closeButton": true,
+            "debug": true,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "showDuration": "300",
+            "hideDuration": "1000000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        var msg_there = "{{message.there}}";
+        if(msg_there=="1"){
+        var msg_mode = "{{message.mode}}";
+        if(msg_mode=="1"){
+            toastr["success"]("{{message.title}}", "Success");
+        }
+        else if(msg_mode=="0"){
+            toastr["error"]("{{message.title}}", "Error");
+        }
+        else if(msg_mode=="2"){
+            toastr["welcome"]("{{message.title}}", "Welcome");
+        }
+        }
+    });
+    </script>
+    <style>
+        #barChart{
+            padding: 4px;
+            margin-bottom: 50px;
+            border-radius: 5px;
+            background-image: url("{{ url_for('static', filename='images/dashboard/circle.svg')}}");
+            background-size: cover;
+            padding: 30px;
+
+        }
+
+        .barChartWrap{
+            /* width: 700px;
+            height: 350px; */
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+            width: auto;
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        .barChartWrapArea {
+            width: 800px;
+            height: 350px;
+        }
+
+        #spiralChart{
+            margin-left: 40px;
+            height: 350px!important;
+            width: 400px!important;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            border-radius: 5px;
+            padding: 30px;
+            background-image: url("{{ url_for('static', filename='images/dashboard/circle.svg')}}");
+        }
+        
+        .spiralChartWrap{
+            width: 400px;
+            height: 350px;
+        }
+
+        @media (max-width:768px){
+            #spiralChart{
+                width: 85vw!important;
+                margin:auto;
+                margin-top: 30px;
+                margin-bottom: 30px;
+            } 
+            .barChartWrap{
+                width: 85vw!important;
+                margin: auto;
+            }
+            .stretch-card{
+                margin-top: 50px;
+                width: 85vw!important;
+                padding: 0px;
+            }
+            .stretch-row{
+                margin-left: 0px!important;
+                margin-right: 0px!important;
+                width: 100vw!important;
+            }
+        }
+
+
+    </style>
+</head>
+
+<body>
+    {% include "loader.html" ignore missing %}
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper" style="background: #d8e3e7;">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary2 text-white mr-2">
+                  <i class="mdi mdi-home"></i>
+                </span> Dashboard </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary2 align-middle"></i>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    {% if chartData %}
+                    <div class="row" style="display:flex;margin-bottom: 30px;margin-left: 0px;" >
+                        <div class="barChartWrap">
+                            <div class="barChartWrapArea">
+                                <canvas id="barChart" data-name="{{chartData}}" width="500" height="350"></canvas>
+                            </div>
+                        </div>
+                        <div class="spiralChartWrap">
+                        <canvas id="spiralChart" data-name="{{chartData}}" width="400" height="350"></canvas>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!-- <div class="row">
+                        <span>Upcoming Examinations</span>
+                        <span style="border-bottom:1px solid  #222;width:100%;margin-top:4px;margin-bottom:20px;"></span>
+                    </div> -->
+                    <div class="row stretch-row">
+                        {% if quizes %}
+
+                        {% set count = 0 %}
+                        {% for quiz in quizes %}
+                            <!-- <h2>Count before loop:{{count}}</h2> -->
+                            {% if (loop.index-1)%6==0 %}
+                                {% set count = 0 %}
+                            {% elif loop.index<=6 %}
+                                {% set count = loop.index-1 %}
+                            {% else %}
+                                {% set index = (loop.index/6)|round|int %}
+                                <!-- <h2>Index:{{ index }}</h2> -->
+                                {% set count = (loop.index-1)-(index*6) %}
+                            {% endif %}
+                        <div class="col-md-4 stretch-card grid-margin">
+                            <div class="card {{color[count]}} card-img-holder text-white">
+                                {% if mode == 'Admin' %}
+                                    {% if loop.index==1 %}
+                                    <a class="card-block stretched-link text-decoration-none" href="/admin/master_data?mode=Student"></a>
+                                    {% elif loop.index==2 %}
+                                    <a class="card-block stretched-link text-decoration-none" href="/admin/master_data?mode=Faculty"></a>
+                                    {% else %}
+                                    <a class="card-block stretched-link text-decoration-none" href="/admin/master_data?mode=Subject"></a>
+                                    {% endif %}
+                                {% elif mode == 'Faculty' %}
+                                <a class="card-block stretched-link text-decoration-none" href="/quiz/get_quiz?quiz_id={{quiz.quiz_id}}"></a>
+                                {% elif mode == 'Student' %}                                    
+                                <a class="card-block stretched-link text-decoration-none" href="/quiz/get_quiz?quiz_id={{quiz.quiz_id}}">
+                                {% endif %}
+                                {% if mode == 'Admin' %}
+                                    <div class="card-body" style="color: white;">
+                                        <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                        {% if loop.index==1 %}
+                                        <h3 class="font-weight-normal mb-3"><b>Student</b><i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+                                        </h3>
+                                        <h2 class="card-text">Total Students : <b>{{quiz.Total_Stud}}</b></h2>
+                                        {% elif loop.index==2 %}
+                                        <h3 class="font-weight-normal mb-3"><b>Faculty</b><i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+                                        </h3>
+                                        <h2 class="card-text">Total Faculties : <b>{{quiz.Total_Fac}}</b></h2>
+                                        {% else %}
+                                        <h3 class="font-weight-normal mb-3"><b>Subject</b><i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+                                        </h3>
+                                        <h2 class="card-text">Total Subjects : <b>{{quiz.Total_Sub}}</b></h2>
+                                        {% endif %}
+                                        
+                                    </div>
+                                {% else %}
+                                    <div class="card-body" style="color: white;">
+                                        <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                        {% if quiz.quiz_type=='0' %}
+                                        <h3 class="font-weight-normal mb-3">Sub: <b>{{quiz.q_sub}}</b><i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+                                        </h3>
+                                        {% else %}
+                                        <h3 class="font-weight-normal mb-3"><b>Non-Subjective</b><i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+                                        </h3>
+                                        {% endif %}
+                                        <h2 class="mb-5">Topic: <b>{{quiz.q_title}}</b></h2>
+                                        <h4 class="card-text">On : <b>{{quiz.q_date}}          {{quiz.q_time_start}} - {{quiz.q_time_end}}</b></h4>
+                                    </div>
+                                {% endif %}
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="col-md-12 stretch-card grid-margin">
+                            <div class="card card-img-holder text-white">
+                                <div class="card-body" style="color: black;">
+                                    <h4>No Quizes Till Now!</h4>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- <div class="col-md-4 stretch-card grid-margin">
+                            <div class="card bg-gradient-info card-img-holder text-white">
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                    <h4 class="font-weight-normal mb-3">Subject Name<i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+                                    </h4>
+                                    <h2 class="mb-5">Quiz Title</h2>
+                                    <h6 class="card-text">Time and Date</h6>
+                                </div>
+                            </div>
+                        </div> -->
+                        <!-- div class="col-md-4 stretch-card grid-margin">
+                            <div class="card bg-gradient-success card-img-holder text-white">
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                    <h4 class="font-weight-normal mb-3">Visitors Online <i class="mdi mdi-diamond mdi-24px float-right"></i>
+                                    </h4>
+                                    <h2 class="mb-5">95,5741</h2>
+                                    <h6 class="card-text">Increased by 5%</h6>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer" style="background: #d8e3e7;">
+                    <!-- <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+                    </div> -->
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+    <script>
+        var chartData = $("#barChart").data()['name']
+    </script>
+    <script src="{{ url_for('static', filename='js/chartAnalysis.js')}}"></script>
+    <!-- End custom js for this page -->
+</body>
+
+</html>

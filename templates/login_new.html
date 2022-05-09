@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Test Wise</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon.ico')}}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}">
+<!--===============================================================================================-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/iconic/css/material-design-iconic-font.min.css')}}">
+  
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/animate/animate.css')}}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/css-hamburgers/hamburgers.min.css')}}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/animsition/css/animsition.min.css')}}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/select2/select2.min.css')}}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/daterangepicker/daterangepicker.css')}}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/utils.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css')}}">
+<!--===============================================================================================-->
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+<!-- End layout styles -->
+<link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+
+<link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">
+   
+
+<style type="text/css">
+
+  .required:after {
+    content:" *";
+    color: red;
+    font-size: 1.0rem;
+  }
+
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function message() {
+          // alert("Body loaded!");
+          var msg = "{{message}}";
+          document.login_form.username.focus();
+          // alert(msg);
+          if(msg!="")
+          {
+            $("#myModal").modal();
+            var myModal = $("#myModal");
+            clearTimeout(myModal.data('hideInterval'));
+            myModal.data('hideInterval', setTimeout(function(){
+                myModal.modal('hide');
+            }, 3000));
+          }
+        }
+    </script>
+
+</head>
+
+<body onload="message()">
+	<div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color: #C30;">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="color: white;border-bottom-color: gray;">
+              <h4 class="modal-title">Validation Message</h4>
+              <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body" style="color: white;">
+              <h4>{{message}}</h4>
+            </div>
+            <!-- Modal footer -->
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div> -->
+          </div>
+        </div>
+    </div>
+    <div id="pageloader">
+       <!-- <img src="{{ url_for('static', filename='images/loader.gif')}}" alt="processing..." /> -->
+    </div>
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+			
+				<img src="{{ url_for('static', filename='images/kjsieit.png')}}" class="img-kjlogo">
+
+				<form class="login100-form validate-form" name="login_form" action="/form_login/" onsubmit="return beforesubmit()" method="post" id="login_form">
+					<span class="login100-form-title p-b-26">
+						Test Wise
+					</span>
+					<span class="login100-form-title p-b-48">
+						<img src="{{ url_for('static', filename='images/testwise.png')}}" class="img-testwise">
+					</span>
+
+					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+						<input class="input100" type="email" name="username" id="email" required>
+						<span class="focus-input100" data-placeholder="Email"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
+						<span class="btn-show-pass">
+							<i class="zmdi zmdi-eye"></i>
+						</span>
+						<input class="input100" type="password" name="pass" id="exampleInputPassword1">
+						<span class="focus-input100" data-placeholder="Password"></span>
+					</div>
+					<input type="checkbox"> <label for="rememberMe">Remember me</label>
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							
+							<button type="submit" class="login100-form-btn">
+								Login
+							</button>
+						</div>
+					</div>
+
+					<div class="text-center p-t-115">
+						<span class="txt1">
+							OR
+							<br>
+						</span>
+            <a href="/google_login/">
+						<button class="google-button">
+							<span class="google-button__icon">
+							  <svg viewBox="0 0 366 372" xmlns="http://www.w3.org/2000/svg"><path d="M125.9 10.2c40.2-13.9 85.3-13.6 125.3 1.1 22.2 8.2 42.5 21 59.9 37.1-5.8 6.3-12.1 12.2-18.1 18.3l-34.2 34.2c-11.3-10.8-25.1-19-40.1-23.6-17.6-5.3-36.6-6.1-54.6-2.2-21 4.5-40.5 15.5-55.6 30.9-12.2 12.3-21.4 27.5-27 43.9-20.3-15.8-40.6-31.5-61-47.3 21.5-43 60.1-76.9 105.4-92.4z" id="Shape" fill="#EA4335"/><path d="M20.6 102.4c20.3 15.8 40.6 31.5 61 47.3-8 23.3-8 49.2 0 72.4-20.3 15.8-40.6 31.6-60.9 47.3C1.9 232.7-3.8 189.6 4.4 149.2c3.3-16.2 8.7-32 16.2-46.8z" id="Shape" fill="#FBBC05"/><path d="M361.7 151.1c5.8 32.7 4.5 66.8-4.7 98.8-8.5 29.3-24.6 56.5-47.1 77.2l-59.1-45.9c19.5-13.1 33.3-34.3 37.2-57.5H186.6c.1-24.2.1-48.4.1-72.6h175z" id="Shape" fill="#4285F4"/><path d="M81.4 222.2c7.8 22.9 22.8 43.2 42.6 57.1 12.4 8.7 26.6 14.9 41.4 17.9 14.6 3 29.7 2.6 44.4.1 14.6-2.6 28.7-7.9 41-16.2l59.1 45.9c-21.3 19.7-48 33.1-76.2 39.6-31.2 7.1-64.2 7.3-95.2-1-24.6-6.5-47.7-18.2-67.6-34.1-20.9-16.6-38.3-38-50.4-62 20.3-15.7 40.6-31.5 60.9-47.3z" fill="#34A853"/></svg>
+							</span>
+							<span class="google-button__text">Sign in with Google</span>
+						</button>
+            </a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="dropDownSelect1"></div>
+	
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='vendor/animsition/js/animsition.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='/bootstrap/js/popper.js')}}"></script>
+<script src="{{ url_for('static', filename='/bootstrap/js/bootstrap.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='vendor/select2/select2.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='vendor/daterangepicker/moment.min.js')}}"></script>
+<script src="{{ url_for('static', filename='vendor/daterangepicker/daterangepicker.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='/countdowntime/countdowntime.js')}}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='js/main.js')}}"></script>
+
+	<script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <script type="text/javascript">
+        $("#login_form").on("submit", function(){
+          $("#pageloader").css('display','block');
+        });
+        function showpassword() {
+            var password = document.getElementById('exampleInputPassword1').value;
+            var icon = document.getElementById('show').className;
+            // 
+            if(icon=="fa fa-eye")
+            {
+                // alert("icon_class:"+icon);
+                document.getElementById('show').className = "fa fa-eye-slash";
+                document.getElementById('exampleInputPassword1').type = "password";
+            }
+            else if(icon=="fa fa-eye-slash")
+            {
+                // alert("striked-icon:"+icon);    
+                
+                document.getElementById('show').className = "fa fa-eye";
+                document.getElementById('exampleInputPassword1').type = "text";
+            }   
+        }
+        function isNumberKey(evt){
+            var charCode = (evt.which) ? evt.which : evt.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        }
+        function validateEmail(email) { 
+          var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          if(re.test(email.value)){
+              //Email valid. Procees to test if it's from the right domain (Second argument is to check that the string ENDS with this domain, and that it doesn't just contain it)
+              if(email.value.indexOf("@somaiya.edu", email.value.length - "@somaiya.edu".length) !== -1){
+                  //VALID
+                  // alert("Valid email address!");
+                  return true;
+              }
+              else
+              {
+                alert("Email address must be of Somaiya!");
+                document.login_form.username.focus();
+                return false;
+              }
+          }
+          else
+          {
+            alert("Invalid Email Id");
+            document.login_form.username.focus();
+            return false;
+          }
+        }
+
+        function beforesubmit()
+        {
+          var email_check = validateEmail(document.login_form.username);
+          var pass_check = false;
+          if(document.login_form.pass.value.length<8)
+          {
+            alert("Password cannot be less than 8 characters!");
+          }
+          else if(document.login_form.pass.value.length>=8)
+          {
+            pass_check = true;
+          }
+          if(email_check && pass_check)
+          {
+            return true;
+          }
+          else
+          {
+            return false;
+          }
+        }
+
+    </script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+
+</body>
+</html>

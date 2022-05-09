@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Exam Submit </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/css/vendor.bundle.base.css')}}">    
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style type="text/css">
+      .form-control{
+        font-size: 1.000rem;
+      }
+      .form-group label{
+       font-size: 1.0125rem; 
+      }
+      .btn2 {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 2%;
+      }
+      h4,h3
+      {
+        font-size:  1.525rem;
+      }
+    </style>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico')}}" />
+    <link href="{{ url_for('static', filename='css/loader.css')}}" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script>
+        function message() {
+          // alert("Body loaded!");
+          var msg = "{{message}}";
+          // alert("{{data}}");
+          if(msg!="")
+          {
+            $("#myModal").modal();
+            var myModal = $("#myModal");
+            $("#modbod").text(msg);
+            clearTimeout(myModal.data('hideInterval'));
+            myModal.data('hideInterval', setTimeout(function(){
+                myModal.modal('hide');
+            }, 3000));
+          }
+        }
+    </script>
+</head>
+
+<body onload="message()">
+  {% include "loader.html" ignore missing %}
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color: #C30;">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="color: white;border-bottom-color: gray;">
+              <h4 class="modal-title">Validation Message</h4>
+              <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body" style="color: white;">
+              <h4 id="modbod"></h4>
+            </div>
+            <!-- Modal footer -->
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div> -->
+          </div>
+        </div>
+    </div>
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        {% include "nav.html" ignore missing %}
+        
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            {% include "side_nav.html" ignore missing %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper" style="background: #d8e3e7;">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary2 text-white mr-2"><i class="mdi mdi-pencil"></i></span>Quiz 
+                        </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-data active" aria-current="page">
+                                    <span></span> </i>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 grid-margin">
+                            <div class="card" style="width: 100%;margin-left: 0%;margin-right: 10%;">
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-md-12" style="">
+                                    <!-- {{q_details}} -->
+                                    <div class="row">
+                                      <div class="col-md-12" style="text-align: center;">
+                                        <h3 style="font-size:  1.525rem;" class="card-title">
+                                        {% if msg=='' %}
+                                        Your Response for the quiz is already recorded!</h3>
+                                        {% else %}
+                                        {{msg}}
+                                        {% endif %}
+                                      </div>                                      
+                                    </div>
+                                    <!-- 2 -->
+                                    {% if score!='' and total!='' %}
+                                    <div class="row">
+                                      <div class="col-md-12" style="text-align: center;">
+                                        <h4>Your Score is : {{score}} / {{total}} </h4>
+                                      </div>                                      
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-md-6" style="text-align: center;">
+                                        <button onclick="view_qt()" class="btn btn-gradient-danger mr-2" style="margin: 5%;">View Questions</button>
+                                      </div>
+                                      <div class="col-md-6" style="text-align: center;">
+                                        <button onclick="dashboard()" class="btn btn-gradient-primary mr-2" style="margin: 5%;">Back to Dashboard</button>
+                                      </div>
+                                    </div>
+                                    {% else %}
+                                    <!-- 3 -->
+                                    <div class="row">
+                                      <div class="col-md-12" style="text-align: center;">
+                                        <button onclick="dashboard()" class="btn btn-gradient-primary mr-2" style="margin: 5%;">Back to Dashboard</button>
+                                      </div>
+                                    </div>
+                                    {% endif %}
+                                    <!-- 4 -->
+                                    <!-- <p class="card-description"></p> -->
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        <!-- div class="col-md-4 stretch-card grid-margin">
+                            <div class="card bg-gradient-success card-img-holder text-white">
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
+                                    <h4 class="font-weight-normal mb-3">Visitors Online <i class="mdi mdi-diamond mdi-24px float-right"></i>
+                                    </h4>
+                                    <h2 class="mb-5">95,5741</h2>
+                                    <h6 class="card-text">Increased by 5%</h6>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer" style="background: #d8e3e7;">
+                    <!-- <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+                    </div> -->
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{{ url_for('static', filename='vendors/js/vendor.bundle.base.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/subject.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    
+    <!-- <script src="{{ url_for('static', filename='js/bootstrap.js')}}"></script> -->
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('.ajax-loader').css("visibility", "hidden");
+      });
+      function dashboard()
+      {
+        var base_url = window.location.origin;
+        // alert(base_url);
+        redirect_url = base_url+'/student/close_quiz/';
+        alert(redirect_url);
+        window.location.replace(redirect_url);
+              // alert(base_url);
+      }
+      function preview_quiz()
+      {
+        var base_url = window.location.origin;
+        // alert(base_url);
+        redirect_url = base_url+'/quiz/preview_quiz_question/';
+        // alert(redirect_url);
+        window.location.replace(redirect_url);
+      }
+      function view_qt()
+      {
+        var base_url = window.location.origin;
+        // alert(base_url);
+        redirect_url = base_url+'/student/questions_view/';
+        // alert(redirect_url);
+        window.location.replace(redirect_url);
+      }
+
+    </script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{{ url_for('static', filename='vendors/chart.js/Chart.min.js')}}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{{ url_for('static', filename='js/off-canvas.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/hoverable-collapse.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/misc.js')}}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/todolist.js')}}"></script>
+    <!-- End custom js for this page -->
+</body>
+
+</html>

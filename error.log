@@ -1,0 +1,21 @@
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 181-072-771
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[32mGET / HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /login/ HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/vendors/mdi/css/materialdesignicons.min.css HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/vendors/css/vendor.bundle.base.css HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/css/style.css HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/vendors/js/vendor.bundle.base.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/images/logo_2_sm.png HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/js/hoverable-collapse.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/images/sign-in-with-google.png HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/js/off-canvas.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/js/misc.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/fonts/Ubuntu/Ubuntu-Regular.woff2 HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/fonts/Ubuntu/Ubuntu-Medium.woff2 HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/fonts/Ubuntu/Ubuntu-Light.woff2 HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/fonts/Ubuntu/Ubuntu-Bold.woff2 HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[33mGET /assets/images/favicon.ico HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [28/Dec/2021 17:36:13] "[37mGET /static/vendors/mdi/fonts/materialdesignicons-webfont.woff2?v=3.7.95 HTTP/1.1[0m" 200 -
