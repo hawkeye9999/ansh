@@ -88,7 +88,7 @@ Now, you should be able to access the project locally at [http://localhost:3000/
 
 ## Live Demonstration
 
-Check out the live demo of the project [here](https://examportal.kjsieit.in/) [![Demo](https://github.com/bhavyamistry/Testwise-OnlineExamPortal-with-AntiCheating/assets/58860047/683796cb-d14a-4795-a31a-71950d0d6ca0)](https://examportal.kjsieit.in/)
+[![Demo](https://github.com/bhavyamistry/Testwise-OnlineExamPortal-with-AntiCheating/assets/58860047/683796cb-d14a-4795-a31a-71950d0d6ca0)](https://examportal.kjsieit.in/)
 
 ## Video Demonstration
 
