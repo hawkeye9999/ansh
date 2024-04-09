@@ -27,13 +27,10 @@ The Online Exam Proctoring System aims to address these challenges by providing 
 - **Rapid Score Release**: Speed up assessment and release scores quickly to maintain efficiency.
 - **Results Visualization**: Visualize exam results with intuitive charts and graphs, exportable to Excel sheets.
 
-## Installation
 
-## Installation
+## Installation and Setup
 
 To run the project locally, follow these steps:
-
-### Installation and Setup
 
 1. **Create an .env file**: Create a file named `.env` in the project directory.
 
