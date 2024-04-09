@@ -1,6 +1,6 @@
 # Testwise- Online Examination Portal with Anti-Cheating
 
-![exam](https://github.com/bhavyamistry/Testwise-OnlineExamPortal-with-AntiCheating/assets/58860047/a1f749f4-7fec-4175-bb62-2eb7b460411d)
+![Animation - 1712627079538](https://github.com/bhavyamistry/Testwise-OnlineExamPortal-with-AntiCheating/assets/58860047/f2a65afc-5fd5-4e05-9932-c3c5193cd5a1)
 
 ## Problem Statement
 
@@ -82,7 +82,7 @@ Now, you should be able to access the project locally at [http://localhost:3000/
 
 ## Live Demonstration
 
-Check out the live demo of the project [here](https://examportal.kjsieit.in/) [![Demo](https://github.com/bhavyamistry/Akamai-Smart-Desktop-Assistant-for-Windows/blob/main/assets/58860047/c34348ff-17b8-4008-8e06-8436bcf0ac27.png)](https://examportal.kjsieit.in/)
+Check out the live demo of the project [here](https://examportal.kjsieit.in/) [![Demo](https://github.com/bhavyamistry/Testwise-OnlineExamPortal-with-AntiCheating/assets/58860047/683796cb-d14a-4795-a31a-71950d0d6ca0)](https://examportal.kjsieit.in/)
 
 ## Video Demonstration
 
