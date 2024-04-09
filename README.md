@@ -1,6 +1,7 @@
 # Testwise- Online Examination Portal with Anti-Cheating
 
-https://user-images.githubusercontent.com/58860047/167340083-74c2b911-1c71-4be9-9e0c-6b805421d6eb.mp4
+![exam](https://github.com/bhavyamistry/Testwise-OnlineExamPortal-with-AntiCheating/assets/58860047/8c5f0050-dab4-4ebb-b063-d483caae2052)
+
 
 ## Problem Statement
 
