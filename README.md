@@ -1,6 +1,6 @@
 # Testwise- Online Examination Portal with Anti-Cheating
 
-<img src="https://github.com/bhavyamistry/Testwise-OnlineExamPortal-with-AntiCheating/assets/58860047/f2a65afc-5fd5-4e05-9932-c3c5193cd5a1" width="110%" alt="vector" align="center">
+<img src="https://github.com/bhavyamistry/Testwise-OnlineExamPortal-with-AntiCheating/assets/58860047/f2a65afc-5fd5-4e05-9932-c3c5193cd5a1" width="100%" alt="vector" align="center">
 
 ## Problem Statement
 
